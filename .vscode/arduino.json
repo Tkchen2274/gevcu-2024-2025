@@ -1,0 +1,6 @@
+{
+    "configuration": "usb=serial2,speed=600,opt=o2std,keys=en-us",
+    "board": "teensy:avr:teensyMM",
+    "sketch": "GEVCU7.ino",
+    "output": "./build"
+}
