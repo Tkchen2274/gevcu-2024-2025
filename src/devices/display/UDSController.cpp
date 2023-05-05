@@ -32,7 +32,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "UDSController.h"
 #include <Entropy.h>
 #include "../../Logger.h"
-
+#ifdef ERROR_FILE_ENABLE
 UDSController udsctrl; //declared up here because it is actually used in this code.
 
 isotp<RX_BANKS_2, 512> udsIsoTPTargetted;
@@ -517,5 +517,5 @@ void UDSController::saveConfiguration() {
     prefsHandler->saveChecksum();
     prefsHandler->forceCacheWrite();
 }
-
+#endif
 
