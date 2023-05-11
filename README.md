@@ -13,9 +13,10 @@ The project now builds in the Arduino IDE. So, use it to compile, send the firmw
 
 ## Getting Started
 You will need the following to have any hope of compiling and running the firmware:
+
 NOTE: versions listed below have been tested
 - A GEVCU board. This version supports GEVCU7 hardware (the one with Teensy MicroMod)
-- Arduino IDE 1.8.16^ or Arduino for Visual Studio Code extension v0.6.0^
+- Arduino IDE 1.8.16^
 - TeensyDuino 1.58.1 (https://www.pjrc.com/teensy/td_download.html)
 - TeensyTimerTool 1.3.1 (https://github.com/luni64/TeensyTimerTool)
 - ArduinoJson 6.21.2 (https://github.com/bblanchon/ArduinoJson)
