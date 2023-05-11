@@ -18,6 +18,7 @@ NOTE: versions listed below have been tested
 - A GEVCU board. This version supports GEVCU7 hardware (the one with Teensy MicroMod)
 - Arduino IDE 1.8.16^
 - TeensyDuino 1.58.1 (https://www.pjrc.com/teensy/td_download.html)
+ - You will need to go to the settings of arduino and look for "additional board manager..."
 - TeensyTimerTool 1.3.1 (https://github.com/luni64/TeensyTimerTool)
 - ArduinoJson 6.21.2 (https://github.com/bblanchon/ArduinoJson)
 - WDT_T4 0.1.0 (https://github.com/tonton81/WDT_T4)
