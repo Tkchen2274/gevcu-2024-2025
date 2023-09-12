@@ -22,14 +22,15 @@ NOTE: versions listed below have been tested
 - TeensyTimerTool 1.3.1 (https://github.com/luni64/TeensyTimerTool)
 - ArduinoJson 6.21.2 (https://github.com/bblanchon/ArduinoJson)
 - WDT_T4 0.1.0 (https://github.com/tonton81/WDT_T4)
+- FlexCAN_T4 (https://github.com/collin80/FlexCAN_T4)
 - All other libraries are bundled with TeensyDuino
 
-Installation:
+Installation Steps:
 1. Clone the git repository
-2. Add this link (https://www.pjrc.com/teensy/package_teensy_index.json) as an "Additional boards manager URLs"
-3. Download TeensyDuino via the Arduino Board Manager
-4. Download TeensyTimerTool and ArduinoJson via the Arduino Library Manager
-5. Download WDT_T4 via git to your sketchbook libraries directory
+2. Add this link (https://www.pjrc.com/teensy/package_teensy_index.json) as an "Additional boards manager URLs" through the Arduino IDE
+3. Download TeensyDuino via the Arduino Board Manager :clipboard: in the Arduino IDE
+4. Download TeensyTimerTool and ArduinoJson via the Arduino Library Manager :books: in the Arduino IDE
+5. Download [WDT_T4](https://github.com/tonton81/WDT_T4) and [FlexCAN_T4](https://github.com/collin80/FlexCAN_T4) via Github to your sketchbook libraries directory
   * Windows: `%USERPROFILE%\Documents\Arduino\libraries\`
   * Mac/Unix: `~/Documents/Arduino/libraries/`
 
@@ -44,7 +45,7 @@ Arduino Board Configuration:
 Tips:
 * Set the Arduino output path to speed up compilation times (e.g. ./build)
 * View the [ExampleDevice.cpp](docs/ExampleDevice.cpp) file to understand how to support a new device
-
+* If you prefer VSCode, install and setup the [Arduino](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.vscode-arduino) extension to get Intellisense and syntax highlighting
 
 The canbus is supposed to be terminated on both ends of the bus. If you are testing with a DMOC and GEVCU then you've got two devices, each on opposing ends of the bus. GEVCU7 hardware is selectively terminated. By default it is not terminated but this can be solved by soldering the appropriate solder jumper
 
