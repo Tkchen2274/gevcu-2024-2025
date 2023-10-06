@@ -239,6 +239,8 @@ void testGEVCUHardware()
         Serial.print(val);
         Serial.print("  ");
     }
+
+    Serial.print("ADC19: " + systemIO.getAnalogIn(19));
     Serial.println();
 
     Serial.print("DIN: ");
