@@ -104,8 +104,9 @@ RawSignalData *PotThrottle::acquireRawSignal() {
 bool PotThrottle::validateSignal(RawSignalData *rawSignal) {
     PotThrottleConfiguration *config = (PotThrottleConfiguration *) getConfiguration();
     int32_t calcThrottle1, calcThrottle2;
-
-    calcThrottle1 = normalizeInput(rawSignal->input1, config->minimumLevel1, config->maximumLevel1);
+    
+    calcThrottle1 = normalizeInput(rawSignal->input1, config->minimumLevel1, config->maximumLevel1 );
+    //Logger::console("Value is %d", calcThrottle1);
     if (config->numberPotMeters == 1 && config->throttleSubType == 2) { // inverted
         calcThrottle1 = 1000 - calcThrottle1;
     }
@@ -254,14 +255,23 @@ void PotThrottle::loadConfiguration() {
 
     //if (prefsHandler->checksumValid()) { //checksum is good, read in the values stored in EEPROM
         Logger::debug(POTACCELPEDAL, Constants::validChecksum);
-        prefsHandler->read("ThrottleMin1", (uint16_t *)&config->minimumLevel1, 20);        
-        prefsHandler->read("ThrottleMax1", (uint16_t *)&config->maximumLevel1, 3150);
+        prefsHandler->read("ThrottleMin1", (uint16_t *)&config->minimumLevel1, 0);
+        //figure out this number --> 3150
+        //3150 milivolts -->  
+
+        //1 volt around 818
+
+        //5 volts = 818 when max is 5000
+        //5 volts = 1000 when max is 4090
+        //910 dif = 18.2% dif
+       
+        prefsHandler->read("ThrottleMax1", (uint16_t *)&config->maximumLevel1, 4090);
         prefsHandler->read("ThrottleMin2", (uint16_t *)&config->minimumLevel2, 0);        
-        prefsHandler->read("ThrottleMax2", (uint16_t *)&config->maximumLevel2, 0);
-        prefsHandler->read("NumThrottles", &config->numberPotMeters, 1);
+        prefsHandler->read("ThrottleMax2", (uint16_t *)&config->maximumLevel2, 4090);
+        prefsHandler->read("NumThrottles", &config->numberPotMeters, 2);
         prefsHandler->read("ThrottleType", &config->throttleSubType, 1);
         prefsHandler->read("ADC1", &config->AdcPin1, 0);
-        prefsHandler->read("ADC2", &config->AdcPin2, 1);
+        prefsHandler->read("ADC2", &config->AdcPin2, 4);
 
         // ** This is potentially a condition that is only met if you don't have the EEPROM hardware **
         // If preferences have never been set before, numThrottlePots and throttleSubType

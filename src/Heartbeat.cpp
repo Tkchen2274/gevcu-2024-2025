@@ -77,9 +77,9 @@ void Heartbeat::handleTick() {
         }
 
        // , AIN1: %i, AIN2: %i",
-
-        Logger::console("AIN0: %g, AIN1: %g, AIN2: %g, AIN3: %g, AIN4: %g, AIN5: %g, AIN6: %g, AIN7: %g", ((double)(analogRead(0))*5)/4096, ((double)(analogRead(1))*5)/4096, ((double)(analogRead(2))*5)/4096, ((double)(analogRead(3))*5)/4096,
-     ((double)(analogRead(4))*5)/4096, ((double)(analogRead(5))*5)/4096, ((double)(analogRead(6))*5)/4096, ((double)(analogRead(7))*5)/4096);
+        Logger::console("AIN0: %g, AIN1: %g", ((double)(analogRead(0))*5)/4096, ((double)(analogRead(1))*5)/4096);
+       // Logger::console("AIN0: %g, AIN1: %g, AIN2: %g, AIN3: %g, AIN4: %g, AIN5: %g, AIN6: %g, AIN7: %g", ((double)(analogRead(0))*5)/4096, ((double)(analogRead(1))*5)/4096, ((double)(analogRead(2))*5)/4096, ((double)(analogRead(3))*5)/4096,
+   //  ((double)(analogRead(4))*5)/4096, ((double)(analogRead(5))*5)/4096, ((double)(analogRead(6))*5)/4096, ((double)(analogRead(7))*5)/4096);
        /* Logger::console("DIN0: %d, DIN1: %d, DIN2: %d, DIN3: %d, DIN4: %d, DIN5: %d, DIN6: %d, DIN7: %d, DIN8: %d, DIN9: %d, DIN10: %d, DIN11: %d", 
                         systemIO.getDigitalIn(0), systemIO.getDigitalIn(1), systemIO.getDigitalIn(2), systemIO.getDigitalIn(3),
                         systemIO.getDigitalIn(4), systemIO.getDigitalIn(5), systemIO.getDigitalIn(6), systemIO.getDigitalIn(7),

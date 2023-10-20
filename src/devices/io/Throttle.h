@@ -57,7 +57,7 @@
 //these two should be configuration options instead.
 #define CFG_CANTHROTTLE_MAX_NUM_LOST_MSG            3 // maximum number of lost messages allowed
 #define CFG_THROTTLE_TOLERANCE  150 //the max that things can go over or under the min/max without fault - 1/10% each #
-#define ThrottleMaxErrValue		150		//tenths of percentage allowable deviation between pedals
+#define ThrottleMaxErrValue		100		//tenths of percentage allowable deviation between pedals
 
 /*
  * Data structure to hold raw signal(s) of the throttle.
