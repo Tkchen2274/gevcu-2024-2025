@@ -44,11 +44,21 @@ DeviceType testDevice::getType() {
 void testDevice::handleTick()
 {
     var.len = 3;
-    var.id = 0x729;
-    var.buf[0] = 1;
-    var.buf[1] = 2;
-    var.buf[2] = 3;
+    var.id = 0x201;
+    var.buf[0] = 0x51;
+    // 0x04 to DISABLE
+    var.buf[1] = 0x04;
+    // 0x00 to ENABLE
+    //var.buf[1] = 0x00;
+    var.buf[2] = 0x00;
     attachedCANBus->sendFrame(var);
+    
+    // send 5% speed
+    var.buf[0] = 0x31;
+    var.buf[1] = 0x66;
+    var.buf[2] = 0x06;
+    attachedCANBus->sendFrame(var);
+
 
 }
 

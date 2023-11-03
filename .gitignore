@@ -945,6 +945,7 @@ _deps
 ##### C++
 # Prerequisites
 *.d
+*.clangd
 
 # Compiled Object files
 *.slo
