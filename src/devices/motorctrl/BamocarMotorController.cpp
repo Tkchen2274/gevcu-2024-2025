@@ -53,7 +53,7 @@ void BamocarMotorController::handleTick() {
     attachedCANBus->sendFrame(var);
 }
 
-void handleCanFrame(const CAN_message_t &frame) {
+void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
     
 }
 
