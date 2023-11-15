@@ -3,6 +3,7 @@
  */
 
 #include "BamocarMotorController.h"
+#include <sstream>
 
 BamocarMotorController::BamocarMotorController() : MotorController() {    
     selectedGear = DRIVE;
@@ -35,6 +36,21 @@ void BamocarMotorController::handleTick() {
     BamocarMotorControllerConfiguration *config = (BamocarMotorControllerConfiguration *)getConfiguration();
     
     MotorController::handleTick();
+    int percent = torqueRequested; 
+
+    //rounding to nearest 10th
+    int a = (percent/10)*10;
+    int b = a + 10;
+    percent = (percent - a > b - percent)? b : a;
+    int input = percent*327;
+
+    //convert to hex
+    std::stringstream ss;
+    ss << "0x" << std::hex << input;
+    std::string res (ss.str());
+
+    //parse string to int
+
 
     var.len = 3;
     var.id = 0x201;
