@@ -44,12 +44,8 @@ void BamocarMotorController::handleTick() {
     percent = (percent - a > b - percent)? b : a;
     int input = percent*327;
 
-    //convert to hex
-    std::stringstream ss;
-    ss << "0x" << std::hex << input;
-    std::string res (ss.str());
-
-    //parse string to int
+    uint32_t firsthalf = (input & 0xFF);
+    uint32_t secondhalf = ((input >> 8) & 0xFF);
 
 
     var.len = 3;
@@ -64,8 +60,8 @@ void BamocarMotorController::handleTick() {
     
     // send 5% speed
     var.buf[0] = 0x31;
-    var.buf[1] = 0x66;
-    var.buf[2] = 0x06;
+    var.buf[1] = secondhalf;
+    var.buf[2] = firsthalf;
     attachedCANBus->sendFrame(var);
 }
 
