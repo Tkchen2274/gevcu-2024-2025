@@ -34,7 +34,15 @@ void BamocarMotorController::setup() {
 
 void BamocarMotorController::handleTick() {
     BamocarMotorControllerConfiguration *config = (BamocarMotorControllerConfiguration *)getConfiguration();
-    
+    //if the brake is pressed beyond a certain point set the speed back down to 0
+    //if the brake is pressed also send a speed signal but lower than the current speed
+    //if the throttle is released a little then the speed should still be similar, not immediately down to 0
+    //max press accelerate max 
+    //make it as close to a regular car
+    //brakes regular car as well
+    //willl never really have a cruising speed
+    //linear
+    //max push max acceleration
     MotorController::handleTick();
     int percent = torqueRequested; 
 
@@ -46,7 +54,7 @@ void BamocarMotorController::handleTick() {
 
     uint32_t firsthalf = (input & 0xFF);
     uint32_t secondhalf = ((input >> 8) & 0xFF);
-
+    // check if the motor will still spin even if the pedal is released all the way up
 
     var.len = 3;
     var.id = 0x201;
