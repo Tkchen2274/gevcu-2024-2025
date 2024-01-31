@@ -1,7 +1,7 @@
 /*
  * BamocarMotorController.cpp
  */
-
+#include "../PotThrottle.h"
 #include "BamocarMotorController.h"
 #include <sstream>
 
@@ -44,13 +44,11 @@ void BamocarMotorController::handleTick() {
     //linear
     //max push max acceleration
     MotorController::handleTick();
-    int percent = torqueRequested; 
+    PotThrottle throttle;
+    int percent = throttle.calculatePedalPosition(throttle.acquireRawSignal()); 
 
     //rounding to nearest 10th
-    int a = (percent/10)*10;
-    int b = a + 10;
-    percent = (percent - a > b - percent)? b : a;
-    int input = percent*327;
+    int a = (percent/10);
 
     uint32_t firsthalf = (input & 0xFF);
     uint32_t secondhalf = ((input >> 8) & 0xFF);
