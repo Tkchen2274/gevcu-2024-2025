@@ -1,7 +1,7 @@
 /*
  * BamocarMotorController.cpp
  */
-#include "../PotThrottle.h"
+#include "../io/PotThrottle.h"
 #include "BamocarMotorController.h"
 #include <sstream>
 
