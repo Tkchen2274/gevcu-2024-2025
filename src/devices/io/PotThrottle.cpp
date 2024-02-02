@@ -265,9 +265,10 @@ void PotThrottle::loadConfiguration() {
         //5 volts = 1000 when max is 4090
         //910 dif = 18.2% dif
        
-        prefsHandler->read("ThrottleMax1", (uint16_t *)&config->maximumLevel1, 4090);
-        prefsHandler->read("ThrottleMin2", (uint16_t *)&config->minimumLevel2, 0);        
-        prefsHandler->read("ThrottleMax2", (uint16_t *)&config->maximumLevel2, 4090);
+        prefsHandler->read("ThrottleMax1", (uint16_t *)&config->maximumLevel1, 3353);
+        prefsHandler->read("ThrottleMin2", (uint16_t *)&config->minimumLevel2, 298);        
+        prefsHandler->read("ThrottleMax2", (uint16_t *)&config->maximumLevel2, 1680);
+        prefsHandler->read("ThrottleMin1", (uint16_t *)&config->minimumLevel1, 598);
         prefsHandler->read("NumThrottles", &config->numberPotMeters, 2);
         prefsHandler->read("ThrottleType", &config->throttleSubType, 1);
         prefsHandler->read("ADC1", &config->AdcPin1, 0);
