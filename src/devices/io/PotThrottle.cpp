@@ -227,6 +227,13 @@ int16_t PotThrottle::calculatePedalPosition(RawSignalData *rawSignal) {
             calcThrottle2 = 1000 - calcThrottle2;
         calcThrottle1 = (calcThrottle1 + calcThrottle2) / 2; // now the average of the two
     }
+
+    // int a = (calcThrottle1/10);
+    // uint32_t firsthalf = (a & 0xFF);
+    // uint32_t secondhalf = ((a >> 8) & 0xFF);
+    
+    
+    
     return calcThrottle1;
 }
 
@@ -315,7 +322,10 @@ String PotThrottle::describeThrottleType()
     if (config->throttleSubType == 2) return String("Inverse Linear");
     return String("Invalid Value!");
 }
-
+int16_t PotThrottle::getLevel()
+{
+    return calculatePedalPosition(acquireRawSignal());
+}
 //creation of a global variable here causes the driver to automatically register itself without external help
 PotThrottle potThrottle;
 

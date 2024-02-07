@@ -155,7 +155,7 @@ int16_t Throttle::mapPedalPosition(int16_t pedalPosition) {
         status = ERR_MISC;
         
     }
-    if (throttleLevel > 1050) {
+    if (throttleLevel > 1300) {
         Logger::error("Generated throttle level (%i) was way too high!", throttleLevel);
         throttleLevel = 0;
         status = ERR_MISC;

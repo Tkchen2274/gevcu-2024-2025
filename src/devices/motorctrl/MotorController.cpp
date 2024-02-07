@@ -149,19 +149,19 @@ void MotorController::handleTick() {
 
     //Throttle check
     Throttle *accelerator = deviceManager.getAccelerator();
-    Throttle *brake = deviceManager.getBrake();
+    //Throttle *brake = deviceManager.getBrake();
     if (accelerator)
         throttleRequested = accelerator->getLevel();
-    if (brake && brake->getLevel() < -10 && brake->getLevel() < accelerator->getLevel()) //if the brake has been pressed it overrides the accelerator.
-        throttleRequested = brake->getLevel();
+    // if (brake && brake->getLevel() < -10 && brake->getLevel() < accelerator->getLevel()) //if the brake has been pressed it overrides the accelerator.
+    //     throttleRequested = brake->getLevel();
     //Logger::debug("Throttle: %d", throttleRequested);
 
-    if(skipcounter++ > 30)    //A very low priority loop for checks that only need to be done once per second.
-    {
-        skipcounter=0; //Reset our laptimer
-        checkEnableInput();
-        checkReverseInput();
-    }
+    // if(skipcounter++ > 30)    //A very low priority loop for checks that only need to be done once per second.
+    // {
+    //     skipcounter=0; //Reset our laptimer
+    //     checkEnableInput();
+    //     checkReverseInput();
+    // }
 }
 
 /*

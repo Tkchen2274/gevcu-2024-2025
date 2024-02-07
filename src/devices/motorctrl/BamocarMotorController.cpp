@@ -43,15 +43,21 @@ void BamocarMotorController::handleTick() {
     //willl never really have a cruising speed
     //linear
     //max push max acceleration
+
     MotorController::handleTick();
-    PotThrottle throttle;
-    int percent = throttle.calculatePedalPosition(throttle.acquireRawSignal()); 
+    if (throttleRequested < 0) throttleRequested = 0;
+    if (throttleRequested > 1000 && throttleRequested < 1300) throttleRequested = 1000;
+    if (throttleRequested > 1400) throttleRequested = 0;
 
-    //rounding to nearest 10th
-    int a = (percent/10);
+    
 
-    uint32_t firsthalf = (input & 0xFF);
-    uint32_t secondhalf = ((input >> 8) & 0xFF);
+    // //rounding to nearest 10th
+    int a = (throttleRequested/10);
+    a = a*327;
+    uint32_t firsthalf = (a & 0xFF);
+    uint32_t secondhalf = ((a >> 8) & 0xFF);
+    
+   // Logger::warn("First half %i | Second half %i", firsthalf, secondhalf);
     // check if the motor will still spin even if the pedal is released all the way up
 
     var.len = 3;
