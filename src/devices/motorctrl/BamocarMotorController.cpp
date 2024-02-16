@@ -63,14 +63,14 @@ void BamocarMotorController::handleTick() {
     var.id = 0x201;
     var.buf[0] = 0x51;
     // 0x04 to DISABLE
-    var.buf[1] = 0x04;
+    //var.buf[1] = 0x04;
     // 0x00 to ENABLE
-    //var.buf[1] = 0x00;
+    var.buf[1] = 0x00;
     var.buf[2] = 0x00;
     attachedCANBus->sendFrame(var);
     
     // send 5% speed
-    var.buf[0] = 0x31;
+    var.buf[0] = 0x90;
     var.buf[1] = secondhalf;
     var.buf[2] = firsthalf;
     attachedCANBus->sendFrame(var);
