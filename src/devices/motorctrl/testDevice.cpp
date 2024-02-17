@@ -1,5 +1,7 @@
 #include "testDevice.h"
 
+#include "BamocarMotorController.h"
+
 testDevice::testDevice() : Device() {
     commonName = "testDevice";
     shortName = "test";
@@ -18,7 +20,6 @@ void testDevice::setup() {
     Device::setup(); // run the parent class version of this function
 
     setAttachedCANBus(0);
-
     //Relevant BMS messages are 0x300 - 0x30F
     attachedCANBus->attach(this, 0x200, 0x7f0, false);
     tickHandler.attach(this, testDeviceTickInt);
@@ -43,13 +44,14 @@ DeviceType testDevice::getType() {
 
 void testDevice::handleTick()
 {
+
     var.len = 3;
     var.id = 0x201;
     var.buf[0] = 0x51;
     // 0x04 to DISABLE
-    var.buf[1] = 0x04;
+    //var.buf[1] = 0x04;
     // 0x00 to ENABLE
-    //var.buf[1] = 0x00;
+    var.buf[1] = 0x00;
     var.buf[2] = 0x00;
     attachedCANBus->sendFrame(var);
     
@@ -58,8 +60,5 @@ void testDevice::handleTick()
     var.buf[1] = 0x66;
     var.buf[2] = 0x06;
     attachedCANBus->sendFrame(var);
-
-
 }
-
 testDevice test_device;

@@ -28,6 +28,10 @@ void BamocarMotorController::setup() {
     setSelectedGear(DRIVE);
     setOpState(ENABLE);
 
+    setAttachedCANBus(0);
+    //Relevant BMS messages are 0x300 - 0x30F
+    attachedCANBus->attach(this, 0x200, 0x7f0, false);
+    
     tickHandler.attach(this, CFG_TICK_INTERVAL_MOTOR_CONTROLLER_BAMOCAR);
 }
 
@@ -52,28 +56,32 @@ void BamocarMotorController::handleTick() {
 
     // //rounding to nearest 10th
     int a = (throttleRequested/10);
-    a = a*327;
+    a = a*100;
     uint32_t firsthalf = (a & 0xFF);
     uint32_t secondhalf = ((a >> 8) & 0xFF);
     
-   // Logger::warn("First half %i | Second half %i", firsthalf, secondhalf);
+    //Logger::warn("First half %i | Second half %i", firsthalf, secondhalf);
     // check if the motor will still spin even if the pedal is released all the way up
 
     var.len = 3;
     var.id = 0x201;
-    var.buf[0] = 0x51;
-    // 0x04 to DISABLE
-    //var.buf[1] = 0x04;
-    // 0x00 to ENABLE
-    var.buf[1] = 0x00;
-    var.buf[2] = 0x00;
-    attachedCANBus->sendFrame(var);
-    
+
+    // var.buf[0] = 0x51;
+    // // 0x04 to DISABLE
+    // var.buf[1] = 0x04;
+    // // 0x00 to ENABLE
+    // //var.buf[1] = 0x00;
+    // var.buf[2] = 0x00;
+    // attachedCANBus->sendFrame(var);
+
     // send 5% speed
-    var.buf[0] = 0x90;
+    var.buf[0] = 0x31;
     var.buf[1] = secondhalf;
     var.buf[2] = firsthalf;
     attachedCANBus->sendFrame(var);
+
+
+
 }
 
 void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
