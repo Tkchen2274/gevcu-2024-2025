@@ -45,7 +45,7 @@ SystemIO::SystemIO()
     
     numDigIn = NUM_DIGITAL;
     numDigOut = NUM_OUTPUT;
-    numAnaIn = 6;
+    numAnaIn = NUM_ANALOG;
     numAnaOut = 0;
     pcaDigitalOutputCache = 0; //all outputs off by default
     adcMuxSelect = 0;
@@ -320,13 +320,11 @@ get value of one of the analog inputs
 int16_t SystemIO::getAnalogIn(uint8_t which) {
     int valu;
 
-    //numAnaIn = 6
     if (which > numAnaIn)
     {
         return 0;
-    }   
-
-    //num_analog = 8     
+    }
+        
     if (which < NUM_ANALOG)
     {
         valu = _pGetAnalogRaw(which);
