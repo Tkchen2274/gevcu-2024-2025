@@ -47,13 +47,437 @@ void BamocarMotorController::handleTick() {
     //linear
     //max push max acceleration
 
+    //CONFIGURATIONS FOR THE MOTORCONTROLLER
+    if (true) //send once to start up 
+    {
+        var.len = 3;
+        var.id = 0x201;
+
+        //N Nom set to 5500
+        var.buf[0] = 0x59;
+        var.buf[2] = 0x15;
+        var.buf[1] = 0x7C;
+        attachedCANBus->sendFrame(var);
+
+        //F NOM set to 300
+        var.buf[0] = 0x05;
+        var.buf[2] = 0x01;
+        var.buf[1] = 0x2C;
+        attachedCANBus->sendFrame(var);
+        
+        //V NOM set to 710
+        var.buf[0] = 0x06;
+        var.buf[2] = 0x02;
+        var.buf[1] = 0xC6;
+        attachedCANBus->sendFrame(var);
+
+        //cos Phi set to 0
+        var.buf[0] = 0x0e;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //I Max eff set to 250.0
+        var.buf[0] = 0x4d;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0xFA;
+        attachedCANBus->sendFrame(var);
+
+        //I nom set to 115
+        var.buf[0] = 0x4e;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x73;
+        attachedCANBus->sendFrame(var);
+
+        //M-Pole set to 20
+        var.buf[0] = 0x4f;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x14;
+        attachedCANBus->sendFrame(var);
+
+        //Kt and Ke ???? :TODO:
+
+        //Brake Delay set to 0
+        var.buf[0] = 0xf1;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //Coast Stop ??? :TODO:
+
+        //set M-temp to 15000
+        var.buf[0] = 0xa3;
+        var.buf[2] = 0x3A;
+        var.buf[1] = 0x98;
+        attachedCANBus->sendFrame(var);
+
+        //FB-Pole set to 2
+        var.buf[0] = 0xa7;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x02;
+        attachedCANBus->sendFrame(var);
+
+        //FB-offset to 115
+        var.buf[0] = 0x44;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x73;
+        attachedCANBus->sendFrame(var);
+
+        //FB-Incr to 2048
+        var.buf[0] = 0xa6;
+        var.buf[2] = 0x08;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //Factor-ext to 0
+        var.buf[0] = 0x7e;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //set axis to "AT"
+        var.len = 5;
+        var.buf[0] = 0xf8;
+        var.buf[1] = 0x54;
+        var.buf[2] = 0x41;
+        var.buf[3] = 0x00;
+        var.buf[4] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        // TODO: MAINS Type????
+
+        //Mains Voltage to 100
+        var.len = 3;
+        var.buf[0] = 0x64;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x64;
+        attachedCANBus->sendFrame(var);
+   
+        //DC-Bus max to 120, DC-Bus min to 6
+        var.len = 5;
+        var.buf[0] = 0xa5;
+        var.buf[1] = 0x78;
+        var.buf[2] = 0x00;
+        var.buf[3] = 0x06;
+        var.buf[4] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //Regen set to int TODO ?????
+
+        //Regen-P to 25
+        var.buf[0] = 0x65;
+        var.buf[1] = 0x00;
+        var.buf[2] = 0x00;
+        var.buf[3] = 0x19;
+        var.buf[4] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //BTB Power TODO ????
+
+        // TODO set PWM Freq to 8 kHz i16
+        // var.len = 3;
+        // var.buf[0] = 0x19;
+        // var.buf[2] = 
+
+        //set mode to Dig.Commands TODO
+        
+        //set cutoff (dig.) to 0
+        var.len = 3;
+        var.buf[0] = 0x1e;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //set cutoff (dig.) to 0
+        var.len = 3;
+        var.buf[0] = 0x1e;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        // KP current set to 20
+        var.buf[0] = 0x1c;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x14;
+        attachedCANBus->sendFrame(var);
+
+        
+        // TI set to 1600
+        var.buf[0] = 0x1d;
+        var.buf[2] = 0x06;
+        var.buf[1] = 0x40;
+        attachedCANBus->sendFrame(var);
+
+        //TiM set to 80
+        var.buf[0] = 0x2b;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x50;
+        attachedCANBus->sendFrame(var);
+        
+        //xKp2 to 0
+        var.buf[0] = 0xc9;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //Kf set to 0
+        var.buf[0] = 0xcb;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //Ramp set to 2000
+        var.buf[0] = 0x25;
+        var.buf[2] = 0x07;
+        var.buf[1] = 0xD0;
+        attachedCANBus->sendFrame(var);
+        
+        //I max pk to 20
+        var.buf[0] = 0xc4;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x14;
+        attachedCANBus->sendFrame(var);
+        
+        //I con eff to 20
+        var.buf[0] = 0xc5;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x14;
+        attachedCANBus->sendFrame(var);
+
+        //T-peak to 15
+        var.buf[0] = 0xf0;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x0F;
+        attachedCANBus->sendFrame(var);
+
+
+        // I lim dig to 95
+        var.buf[0] = 0x46;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x5F;
+        attachedCANBus->sendFrame(var);
+        
+        //I-red-N to 100
+        var.buf[0] = 0x3c;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x64;
+        attachedCANBus->sendFrame(var);
+
+        
+        //i-red-Td to 21000
+        var.buf[0] = 0x58;
+        var.buf[2] = 0x52;
+        var.buf[1] = 0x08;
+        attachedCANBus->sendFrame(var);
+
+        
+        //i-red-te to 23000
+        var.buf[0] = 0x4c;
+        var.buf[2] = 0x59;
+        var.buf[1] = 0xD8;
+        attachedCANBus->sendFrame(var);
+        
+        //i-red-tm 32767
+        var.buf[0] = 0xa2;
+        var.buf[2] = 0x7F;
+        var.buf[1] = 0xFF;
+        attachedCANBus->sendFrame(var);
+        
+        //T Dc 0
+        var.buf[0] = 0x07;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //V Dc 40
+        var.buf[0] = 0x08;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x28;
+        attachedCANBus->sendFrame(var);
+
+        //V min set to 4 TODO ????
+
+        
+        //F min set to 0
+        var.buf[0] = 0x0b;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //V Corner set to 0
+        var.buf[0] = 0x0c;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //F corner set to 0
+        var.buf[0] = 0x0d;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //f-sh set to linear?? TODO
+
+        
+        // Kp speed set to 10
+        var.buf[0] = 0x2c;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x0A;
+        attachedCANBus->sendFrame(var);
+
+        
+        // Ti speed set to 20
+        var.buf[0] = 0x2d;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x14;
+        attachedCANBus->sendFrame(var);
+
+        
+        //Td speed set to 0
+        var.buf[0] = 0x2e;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        
+        //TiM set to 60
+        var.buf[0] = 0x3b;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x3C;
+        attachedCANBus->sendFrame(var);
+        
+        //Kacc set to 0 
+        var.buf[0] = 0x5b;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        
+        //filter set to 4
+        var.buf[0] = 0x5e;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x04;
+        attachedCANBus->sendFrame(var);
+
+        //TODO N R-acc and N R-Dec
+        
+        //R-Lim set to 1000
+        var.buf[0] = 0xc7;
+        var.buf[2] = 0x03;
+        var.buf[1] = 0xE8;
+        attachedCANBus->sendFrame(var);
+
+        //TODO M R-acc, M R-Dec, M R-rcp, N-100%
+
+        
+        //N-Lim set to 10
+        var.buf[0] = 0x34;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x0A;
+        attachedCANBus->sendFrame(var);
+        
+        //N-Lim+ set to 100
+        var.buf[0] = 0x3f;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x64;
+        attachedCANBus->sendFrame(var);
+
+        
+        //N-Lim- set to -100
+        var.buf[0] = 0x1c;
+        var.buf[2] = 0xFF;
+        var.buf[1] = 0x9C;
+        attachedCANBus->sendFrame(var);
+        
+        //Kp position to 0
+        var.buf[0] = 0x6a;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        
+        //Ti position set to 0
+        var.buf[0] = 0x6b;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        
+        //Td position set to 0 
+        var.buf[0] = 0x6c;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        
+        //TiM posiiton set to 0
+        var.buf[0] = 0x71;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //Tol-wind set to 0
+        var.buf[0] = 0x79;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        
+        //Off Ref set to 0 
+        var.len = 5;
+        var.buf[0] = 0x72;
+        var.buf[4] = 0x00;
+        var.buf[3] = 0x00;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //ND-Scale set to 0
+        var.buf[0] = 0x7c;
+        var.buf[4] = 0x00;
+        var.buf[3] = 0x00;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //ND-Offset set to 0
+        var.buf[0] = 0x7d;
+        var.buf[4] = 0x00;
+        var.buf[3] = 0x00;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+        
+        //speed 1 set to 120
+        var.len = 3;
+        var.buf[0] = 0x76;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x78;
+        attachedCANBus->sendFrame(var);
+                
+        //speed 2 set to 120
+        var.buf[0] = 0x77;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x78;
+        attachedCANBus->sendFrame(var);
+                
+        //reso edge set to 0
+        var.buf[0] = 0x75;
+        var.buf[2] = 0x00;
+        var.buf[1] = 0x00;
+        attachedCANBus->sendFrame(var);
+
+        //TODO ref-ramp set to LIM
+    }
+
+
     MotorController::handleTick();
     if (throttleRequested < 0) throttleRequested = 0;
     if (throttleRequested > 1000 && throttleRequested < 1300) throttleRequested = 1000;
     if (throttleRequested > 1400) throttleRequested = 0;
 
     
-
+    //Logger::warn("throttleRequested | %i", throttleRequested);
     // //rounding to nearest 10th
     int a = (throttleRequested/10);
     a = a*100;
@@ -68,17 +492,18 @@ void BamocarMotorController::handleTick() {
 
     // var.buf[0] = 0x51;
     // // 0x04 to DISABLE
-    // var.buf[1] = 0x04;
+    // // var.buf[1] = 0x04;
     // // 0x00 to ENABLE
-    // //var.buf[1] = 0x00;
+    // var.buf[1] = 0x00;
     // var.buf[2] = 0x00;
     // attachedCANBus->sendFrame(var);
 
+
     // send 5% speed
-    var.buf[0] = 0x31;
-    var.buf[1] = secondhalf;
-    var.buf[2] = firsthalf;
-    attachedCANBus->sendFrame(var);
+    // var.buf[0] = 0x31;
+    // var.buf[1] = secondhalf;
+    // var.buf[2] = firsthalf;
+    // attachedCANBus->sendFrame(var);
 
 
 
@@ -86,6 +511,10 @@ void BamocarMotorController::handleTick() {
 
 void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
     
+    Logger::info("Test id=%X len=%X data=%X,%X,%X,%X,%X,%X,%X,%X",
+                      frame.id, frame.len, 
+                      frame.buf[0], frame.buf[1], frame.buf[2], frame.buf[3],
+                      frame.buf[4], frame.buf[5], frame.buf[6], frame.buf[7]);
 }
 
 void BamocarMotorController::setGear(Gears gear) {
