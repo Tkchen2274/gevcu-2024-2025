@@ -35,6 +35,14 @@ void BamocarMotorController::setup() {
     tickHandler.attach(this, CFG_TICK_INTERVAL_MOTOR_CONTROLLER_BAMOCAR);
 }
 
+uint32_t* hex(int a)
+{
+    static uint32_t returning[2];
+    returning[0] = (a & 0xFF);
+    returning[1] = ((a >> 8) & 0xFF); // Corrected shifting
+    return returning;
+}
+
 void BamocarMotorController::handleTick() {
     BamocarMotorControllerConfiguration *config = (BamocarMotorControllerConfiguration *)getConfiguration();
     //if the brake is pressed beyond a certain point set the speed back down to 0
@@ -55,8 +63,9 @@ void BamocarMotorController::handleTick() {
 
         //N Nom set to 5500
         var.buf[0] = 0x59;
-        var.buf[2] = 0x15;
-        var.buf[1] = 0x7C;
+        uint32_t* a = hex(5500);
+        var.buf[2] = a[0];
+        var.buf[1] = a[1];
         attachedCANBus->sendFrame(var);
 
         //F NOM set to 300
