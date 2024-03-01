@@ -95,7 +95,17 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x14;
         attachedCANBus->sendFrame(var);
 
-        //Kt and Ke ???? :TODO:
+        // //Kt set to 0.940 which you beed to send 940
+        // var.buf[0] = 0x87;
+        // var.buf[2] = 0x03
+        // var.buf[1] = 0xAC;
+        // attachedCANBus->sendFrame(var);
+
+        // //Ke set to 73.48 which you beed to send 940
+        // var.buf[0] = 0x87L;
+        // var.buf[2] = 0x03
+        // var.buf[1] = 0xAC;
+        // attachedCANBus->sendFrame(var);
 
         //Brake Delay set to 0
         var.buf[0] = 0xf1;
@@ -480,7 +490,7 @@ void BamocarMotorController::handleTick() {
     //Logger::warn("throttleRequested | %i", throttleRequested);
     // //rounding to nearest 10th
     int a = (throttleRequested/10);
-    a = a*100;
+    a = a*2;
     uint32_t firsthalf = (a & 0xFF);
     uint32_t secondhalf = ((a >> 8) & 0xFF);
     
@@ -490,6 +500,7 @@ void BamocarMotorController::handleTick() {
     var.len = 3;
     var.id = 0x201;
 
+    // attachedCANBus->sendFrame(var);
     // var.buf[0] = 0x51;
     // // 0x04 to DISABLE
     // // var.buf[1] = 0x04;
@@ -500,10 +511,10 @@ void BamocarMotorController::handleTick() {
 
 
     // send 5% speed
-    // var.buf[0] = 0x31;
-    // var.buf[1] = secondhalf;
-    // var.buf[2] = firsthalf;
-    // attachedCANBus->sendFrame(var);
+    var.buf[0] = 0x31;
+    var.buf[1] = secondhalf;
+    var.buf[2] = firsthalf;
+    attachedCANBus->sendFrame(var);
 
 
 
