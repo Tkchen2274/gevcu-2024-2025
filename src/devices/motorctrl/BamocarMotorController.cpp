@@ -35,13 +35,7 @@ void BamocarMotorController::setup() {
     tickHandler.attach(this, CFG_TICK_INTERVAL_MOTOR_CONTROLLER_BAMOCAR);
 }
 
-uint32_t* hex(int a)
-{
-    static uint32_t returning[2];
-    returning[0] = (a & 0xFF);
-    returning[1] = ((a >> 8) & 0xFF); // Corrected shifting
-    return returning;
-}
+
 
 void BamocarMotorController::handleTick() {
     BamocarMotorControllerConfiguration *config = (BamocarMotorControllerConfiguration *)getConfiguration();
@@ -56,7 +50,7 @@ void BamocarMotorController::handleTick() {
     //max push max acceleration
 
     //CONFIGURATIONS FOR THE MOTORCONTROLLER
-    if (true) //send once to start up 
+    /*if (true) //send once to start up 
     {
         var.len = 3;
         var.id = 0x201;
@@ -277,7 +271,7 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
         
         //I-red-N to 100
-        var.buf[0] = 0x3c;
+        var.buf[0] = 0x3C;
         var.buf[2] = 0x00;
         var.buf[1] = 0x64;
         attachedCANBus->sendFrame(var);
@@ -487,7 +481,7 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
 
         //TODO ref-ramp set to LIM
-    }
+    }*/
 
 
     MotorController::handleTick();
@@ -498,12 +492,22 @@ void BamocarMotorController::handleTick() {
     
     //Logger::warn("throttleRequested | %i", throttleRequested);
     // //rounding to nearest 10th
-    int a = (throttleRequested/10);
-    a = a*2;
-    uint32_t firsthalf = (a & 0xFF);
-    uint32_t secondhalf = ((a >> 8) & 0xFF);
+    int a = throttleRequested;
+    if (a < 50){
+        a = 0;
+    }
+    else{
+        a = a/20;
+        //131071 is 2^17-1 which is in binary is 16 1's since this uses two's complement, this gives you a speed of around -1, as A increases to its max of 100, it will subtract around 2^16-1 from the binary giving you just a leading bit of 1 and a very large negative number as your speed.
+        a = 65535 - a * 327;
+        // (the following comments disregard the if/else statement)
+        // at a = 0 (throttle not pressed), a becomes 2^17 -1 which is 17 1s. When this number is passed through first and second half and through the frame, the 17th bit gets truncated (buf values are 8 bits) --> -1 speed command
+        // at a = 1000 (fully pressed), a becomes 65535 which is 16 1s. 
+    }
+    uint32_t secondhalf = (a & 0xFF);
+    uint32_t firsthalf = ((a>>8));
     
-    //Logger::warn("First half %i | Second half %i", firsthalf, secondhalf);
+    // Logger::warn("%i First half %i | Second half %i", a, firsthalf, secondhalf);
     // check if the motor will still spin even if the pedal is released all the way up
 
     var.len = 3;
@@ -519,7 +523,7 @@ void BamocarMotorController::handleTick() {
     // attachedCANBus->sendFrame(var);
 
 
-    // send 5% speed
+    // // send 5% speed
     var.buf[0] = 0x31;
     var.buf[1] = secondhalf;
     var.buf[2] = firsthalf;

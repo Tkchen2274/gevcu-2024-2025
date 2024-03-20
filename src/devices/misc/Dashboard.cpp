@@ -46,7 +46,7 @@ void DashboardDevice::handleTick()
 {
 
     var.len = 3;
-    var.id = 0x201;
+    var.id = 0x203;
     
     var.buf[0] = 0x3D;
     var.buf[1] = 0x1B;
