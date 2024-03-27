@@ -72,7 +72,8 @@ void BamocarMotorController::handleTick() {
 
         //Not correct
         //V NOM set to 710
-        var.buf[0] = 0x06;
+        // var.buf[0] = 0x06;
+        var.buf[0] = V_NOM;
         var.buf[2] = 0x02;
         var.buf[1] = 0xC6;
         attachedCANBus->sendFrame(var);
@@ -211,11 +212,11 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
 
         //set cutoff (dig.) to 0
-        var.len = 3;
-        var.buf[0] = 0x1e;
-        var.buf[2] = 0x00;
-        var.buf[1] = 0x00;
-        attachedCANBus->sendFrame(var);
+        // var.len = 3;
+        // var.buf[0] = 0x1e;
+        // var.buf[2] = 0x00;
+        // var.buf[1] = 0x00;
+        // attachedCANBus->sendFrame(var);
 
         //Not correct
         // KP current set to 20
