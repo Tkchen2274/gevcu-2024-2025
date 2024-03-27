@@ -169,6 +169,12 @@ DeviceType PotBrake::getType() {
     return (DEVICE_BRAKE);
 }
 
+
+int16_t PotBrake::getLevel()
+{
+    return calculatePedalPosition(acquireRawSignal());
+}
+
 /*
  * Load the device configuration.
  * If possible values are read from EEPROM. If not, reasonable default values
@@ -181,8 +187,8 @@ void PotBrake::loadConfiguration() {
     // we deliberately do not load config via parent class here !
 
     //if (prefsHandler->checksumValid()) { //checksum is good, read in the values stored in EEPROM
-        prefsHandler->read("BrakeMin", (uint16_t *)&config->minimumLevel1, 100);
-        prefsHandler->read("BrakeMax", (uint16_t *)&config->maximumLevel1, 3200);
+        prefsHandler->read("BrakeMin", (uint16_t *)&config->minimumLevel1, 6544);
+        prefsHandler->read("BrakeMax", (uint16_t *)&config->maximumLevel1, 13088);
         prefsHandler->read("BrakeMaxRegen", &config->maximumRegen, 50);
         prefsHandler->read("BrakeMinRegen", &config->minimumRegen, 0);
         prefsHandler->read("BrakeADC", &config->AdcPin1, 2);

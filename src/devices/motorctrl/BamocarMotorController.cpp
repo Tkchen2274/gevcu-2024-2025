@@ -50,24 +50,27 @@ void BamocarMotorController::handleTick() {
     //max push max acceleration
 
     //CONFIGURATIONS FOR THE MOTORCONTROLLER
-    /*if (true) //send once to start up 
+    bool once = true;
+    if (once) //send once to start up 
     {
         var.len = 3;
         var.id = 0x201;
-
+    
         //N Nom set to 5500
         var.buf[0] = 0x59;
         uint32_t* a = hex(5500);
         var.buf[2] = a[0];
         var.buf[1] = a[1];
         attachedCANBus->sendFrame(var);
-
+    
         //F NOM set to 300
         var.buf[0] = 0x05;
         var.buf[2] = 0x01;
         var.buf[1] = 0x2C;
         attachedCANBus->sendFrame(var);
         
+
+        //Not correct
         //V NOM set to 710
         var.buf[0] = 0x06;
         var.buf[2] = 0x02;
@@ -80,6 +83,8 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x00;
         attachedCANBus->sendFrame(var);
 
+
+        //Not correct
         //I Max eff set to 250.0
         var.buf[0] = 0x4d;
         var.buf[2] = 0x00;
@@ -130,6 +135,7 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x02;
         attachedCANBus->sendFrame(var);
 
+        //Not correct
         //FB-offset to 115
         var.buf[0] = 0x44;
         var.buf[2] = 0x00;
@@ -147,7 +153,8 @@ void BamocarMotorController::handleTick() {
         var.buf[2] = 0x00;
         var.buf[1] = 0x00;
         attachedCANBus->sendFrame(var);
-        
+
+        //Not correct
         //set axis to "AT"
         var.len = 5;
         var.buf[0] = 0xf8;
@@ -159,6 +166,7 @@ void BamocarMotorController::handleTick() {
 
         // TODO: MAINS Type????
 
+        //Not correct
         //Mains Voltage to 100
         var.len = 3;
         var.buf[0] = 0x64;
@@ -166,6 +174,7 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x64;
         attachedCANBus->sendFrame(var);
    
+        //Not correct
         //DC-Bus max to 120, DC-Bus min to 6
         var.len = 5;
         var.buf[0] = 0xa5;
@@ -208,6 +217,7 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x00;
         attachedCANBus->sendFrame(var);
 
+        //Not correct
         // KP current set to 20
         var.buf[0] = 0x1c;
         var.buf[2] = 0x00;
@@ -245,12 +255,14 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0xD0;
         attachedCANBus->sendFrame(var);
         
+        //Not correct
         //I max pk to 20
         var.buf[0] = 0xc4;
         var.buf[2] = 0x00;
         var.buf[1] = 0x14;
         attachedCANBus->sendFrame(var);
         
+        //Not correct
         //I con eff to 20
         var.buf[0] = 0xc5;
         var.buf[2] = 0x00;
@@ -263,13 +275,14 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x0F;
         attachedCANBus->sendFrame(var);
 
-
+        //Not correct
         // I lim dig to 95
         var.buf[0] = 0x46;
         var.buf[2] = 0x00;
         var.buf[1] = 0x5F;
         attachedCANBus->sendFrame(var);
         
+        //Not correct
         //I-red-N to 100
         var.buf[0] = 0x3C;
         var.buf[2] = 0x00;
@@ -302,6 +315,7 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x00;
         attachedCANBus->sendFrame(var);
         
+        //Not correct
         //V Dc 40
         var.buf[0] = 0x08;
         var.buf[2] = 0x00;
@@ -374,6 +388,7 @@ void BamocarMotorController::handleTick() {
 
         //TODO N R-acc and N R-Dec
         
+        //Not correct
         //R-Lim set to 1000
         var.buf[0] = 0xc7;
         var.buf[2] = 0x03;
@@ -396,11 +411,13 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
 
         
+        //Not correct
         //N-Lim- set to -100
         var.buf[0] = 0x1c;
         var.buf[2] = 0xFF;
         var.buf[1] = 0x9C;
         attachedCANBus->sendFrame(var);
+        
         
         //Kp position to 0
         var.buf[0] = 0x6a;
@@ -481,7 +498,9 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
 
         //TODO ref-ramp set to LIM
-    }*/
+
+        once = false;
+    }
 
 
     MotorController::handleTick();
@@ -523,11 +542,12 @@ void BamocarMotorController::handleTick() {
     // attachedCANBus->sendFrame(var);
 
 
-    // // send 5% speed
-    var.buf[0] = 0x31;
-    var.buf[1] = secondhalf;
-    var.buf[2] = firsthalf;
-    attachedCANBus->sendFrame(var);
+
+    // // // send 5% speed
+    // var.buf[0] = 0x31;
+    // var.buf[1] = secondhalf;
+    // var.buf[2] = firsthalf;
+    // attachedCANBus->sendFrame(var);
 
 
 

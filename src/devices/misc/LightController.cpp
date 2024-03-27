@@ -80,32 +80,31 @@ void LightController::handleTick() {
     Throttle *throttle = static_cast<Throttle *>(deviceManager.getDeviceByType(DeviceType::DEVICE_THROTTLE));
     Throttle *brake = static_cast<Throttle *>(deviceManager.getDeviceByType(DeviceType::DEVICE_BRAKE));
 
-    if (config->brakeLightOutput < 255)
+    if (config->reverseLightOutput < 255)
     {
+        /*Should never matter as we are never in Reverse mode as that is not allowed in FSAE rules*/
         if (mctl)
         {
             if (mctl->getSelectedGear() == MotorController::Gears::REVERSE)
             {
-                systemIO.setDigitalOutput(config->brakeLightOutput, true);
+                systemIO.setDigitalOutput(config->reverseLightOutput, true);
             }
-            else systemIO.setDigitalOutput(config->brakeLightOutput, false);
+            else systemIO.setDigitalOutput(config->reverseLightOutput, false);
         }
     }
-
-    if (config->reverseLightOutput < 255)
+    /**/
+    if (config->brakeLightOutput < 255)
     {
         int16_t level = 0;
-        if (throttle) level = throttle->getLevel();
         if (brake)
         {
-            int16_t brklvl = brake->getLevel();
-            if ( (brklvl < 0) && (brklvl < level) ) level = brklvl;
+            level = brake->getLevel();
         }
-        if (level < config->reqRegenLevel)
+        if (level > config->reqRegenLevel)
         {
-            systemIO.setDigitalOutput(config->reverseLightOutput, true);
+            systemIO.setDigitalOutput(config->brakeLightOutput, true);
         }
-        else systemIO.setDigitalOutput(config->reverseLightOutput, false);
+        else systemIO.setDigitalOutput(config->brakeLightOutput, false);
     }
 }
 
@@ -136,10 +135,10 @@ void LightController::loadConfiguration() {
     }
     
     Device::loadConfiguration(); // call parent
-
-    prefsHandler->read("BrakeLightOut", &config->brakeLightOutput, 255);
+    //TODO put the output pin to the right pin, right now it is set to 1
+    prefsHandler->read("BrakeLightOut", &config->brakeLightOutput, 1);
     prefsHandler->read("ReverseLightOut", &config->reverseLightOutput, 255);
-    prefsHandler->read("ReqTorque", &config->reqRegenLevel, -30);
+    prefsHandler->read("ReqTorque", &config->reqRegenLevel, 30);
 }
 
 /*
