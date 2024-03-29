@@ -84,7 +84,6 @@ private:
 
     uint16_t torqueCommand;
     void timestamp();
-
     CAN_message_t var; // delete this when handleTick is fully functional
 };
 

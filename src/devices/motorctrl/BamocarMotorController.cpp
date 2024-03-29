@@ -52,7 +52,12 @@ void BamocarMotorController::handleTick() {
     //CONFIGURATIONS FOR THE MOTORCONTROLLER
 //CONFIGURATIONS FOR THE MOTORCONTROLLER
     bool once = true;
-    /*
+
+    var.len = 3;
+    var.id = 0x201; 
+
+
+/*
     if (once) //send once to start up 
     {
         var.len = 3;
@@ -60,19 +65,18 @@ void BamocarMotorController::handleTick() {
     
         //N Nom set to 5500
         var.buf[0] = 0x59;
-        uint32_t* a = hex(5500);
-        var.buf[2] = a[0];
-        var.buf[1] = a[1];
+        var.buf[2] = 0x15;
+        var.buf[1] = 0x7C;
         attachedCANBus->sendFrame(var);
     
-        //F NOM set to 300
+        //F NOM set to 300 - wrong - still ran with wrong numbers
         var.buf[0] = 0x05;
-        var.buf[2] = 0x01;
+        var.buf[2] = 0x03;
         var.buf[1] = 0x2C;
         attachedCANBus->sendFrame(var);
         
 
-        //Not correct - works in isolation
+        //Not correct - works in isolation - still ran with 0
         //V NOM set to 710
 
         var.buf[0] = 0x06;
@@ -88,7 +92,7 @@ void BamocarMotorController::handleTick() {
 
      
 
-        //Not correct - works in isolation
+        //Not correct - works in isolation - works 2nd time - still ran with 1000
         //I Max eff set to 250.0
         var.buf[0] = 0x4d;
         var.buf[2] = 0x00;
@@ -127,7 +131,7 @@ void BamocarMotorController::handleTick() {
 
         //Coast Stop ??? :TODO:
 
-        //set M-temp to 15000
+        //set M-temp to 15000 - 2nd time doesnt work - 
         var.buf[0] = 0xa3;
         var.buf[2] = 0x3A;
         var.buf[1] = 0x98;
@@ -139,15 +143,14 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x02;
         attachedCANBus->sendFrame(var);
 
-        //Not correct - works in isolation
+        //Not correct - works in isolation - 2nd time doesnt work
         //FB-offset to 115
-
         var.buf[0] = 0x44;
         var.buf[2] = 0x00;
         var.buf[1] = 0x73;
         attachedCANBus->sendFrame(var);
 
-        //FB-Incr to 2048
+        //FB-Incr to 2048 
         var.buf[0] = 0xa6;
         var.buf[2] = 0x08;
         var.buf[1] = 0x00;
@@ -159,7 +162,7 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x00;
         attachedCANBus->sendFrame(var);
 
-        //Not correct - works isolated
+        //Not correct - works isolated - 2nd time does work
         //set axis to "AT"
         var.len = 5;
         var.buf[0] = 0xf8;
@@ -171,7 +174,7 @@ void BamocarMotorController::handleTick() {
 
         // TODO: MAINS Type????
 
-        //Not correct - works isolated
+        //Not correct - works isolated - 2nd time doesnt work
         //Mains Voltage to 100
 
         var.len = 3;
@@ -180,7 +183,7 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x64;
         attachedCANBus->sendFrame(var);
 
-        //Not correct - DOES NOT WORK  IN ISOLATION
+        //Not correct - DOES NOT WORK  IN ISOLATION - 2nd time does not work
         //DC-Bus max to 120, DC-Bus min to 6
         var.len = 5;
         var.buf[0] = 0xa5;
@@ -192,7 +195,7 @@ void BamocarMotorController::handleTick() {
 
         //Regen set to int TODO ?????
 
-        //Regen-P to 25
+        //Regen-P to 25 
         var.buf[0] = 0x65;
         var.buf[1] = 0x00;
         var.buf[2] = 0x00;
@@ -209,7 +212,7 @@ void BamocarMotorController::handleTick() {
 
         //set mode to Dig.Commands TODO
         
-        //set cutoff (dig.) to 0
+        //set cutoff (dig.) to 0 
         var.len = 3;
         var.buf[0] = 0x1e;
         var.buf[2] = 0x00;
@@ -223,9 +226,8 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x00;
         attachedCANBus->sendFrame(var);
 
-        //Not correct - works in isolation
+        //Not correct - works in isolation - 2nd time doesnt work
         // KP current set to 20
-
         var.buf[0] = 0x1c;
         var.buf[2] = 0x00;
         var.buf[1] = 0x14;
@@ -262,13 +264,13 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0xD0;
         attachedCANBus->sendFrame(var);
         
-        //Not correct - works in isolation
+        //Not correct - works in isolation - 2nd time doesnt work
         //I max pk to 20
         var.buf[0] = 0xc4;
         var.buf[2] = 0x00;
         var.buf[1] = 0x14;
         attachedCANBus->sendFrame(var);
-        //Not correct - works in isolation
+        //Not correct - works in isolation - 2nd time doesnt work
         //I con eff to 20
         var.buf[0] = 0xc5;
         var.buf[2] = 0x00;
@@ -281,14 +283,14 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
 
 
-        //Not correct - DOES NOT WORK IN ISOLATION
-        // I lim dig to 95
+        //Not correct - DOES NOT WORK IN ISOLATION - 2nd time doesnt work
+        // I lim dig to 95 
         var.buf[0] = 0x46;
         var.buf[2] = 0x00;
         var.buf[1] = 0x5F;
         attachedCANBus->sendFrame(var);
         
-        //Not correct - works in isolation
+        //Not correct - works in isolation - 2nd time doesnt work
         //I-red-N to 100
         var.len = 3;
         var.id = 0x201;
@@ -298,7 +300,7 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
 
         
-        //i-red-Td to 21000
+        //i-red-Td to 21000 
         var.buf[0] = 0x58;
         var.buf[2] = 0x52;
         var.buf[1] = 0x08;
@@ -323,7 +325,7 @@ void BamocarMotorController::handleTick() {
         var.buf[1] = 0x00;
         attachedCANBus->sendFrame(var);
         
-        //Not correct - works in isolation
+        //Not correct - works in isolation - 2nd time does not work
         //V Dc 40
         var.len = 3;
         var.id = 0x201;
@@ -335,7 +337,7 @@ void BamocarMotorController::handleTick() {
         //V min set to 4 TODO ????
 
                 
-        //F min set to 0
+        //F min set to 0 
         var.buf[0] = 0x0b;
         var.buf[2] = 0x00;
         var.buf[1] = 0x00;
@@ -398,7 +400,7 @@ void BamocarMotorController::handleTick() {
 
         //TODO N R-acc and N R-Dec
         
-        //Not correct  - does not work in isolation
+        //Not correct  - does not work in isolation - 2nd time does not
         var.len = 5;
         var.id = 0x201;
         //R-Lim set to 1000
@@ -426,16 +428,15 @@ void BamocarMotorController::handleTick() {
         attachedCANBus->sendFrame(var);
 
         
-        //Not correct does not work in isolation not the right register
-        //N-Lim- set to -100
-        var.len = 3;
-        var.id = 0x201;
-        var.buf[0] = 0x1c;
-        var.buf[2] = 0xFF;
-        var.buf[1] = 0x9C;
-        attachedCANBus->sendFrame(var);
+        // //Not correct - does not work with loop - does not work in isolation - related to speed limit negative
+        // //N-Lim- set to -100
+        // var.len = 3;
+        // var.id = 0x201;
+        // var.buf[0] = 0x3e;
+        // var.buf[2] = 0x00;
+        // var.buf[1] = 0x00;
+        // attachedCANBus->sendFrame(var);
         
-
         //Kp position to 0
         var.buf[0] = 0x6a;
         var.buf[2] = 0x00;
@@ -552,24 +553,20 @@ void BamocarMotorController::handleTick() {
     var.id = 0x201;
 
     // attachedCANBus->sendFrame(var);
-    // var.buf[0] = 0x51;
-    // // 0x04 to DISABLE
-    // // var.buf[1] = 0x04;
-    // // 0x00 to ENABLE
-    // var.buf[1] = 0x00;
-    // var.buf[2] = 0x00;
-    // attachedCANBus->sendFrame(var);
+    var.buf[0] = 0x51;
+    // 0x04 to DISABLE
+    // var.buf[1] = 0x04;
+    // 0x00 to ENABLE
+    var.buf[1] = 0x04;
+    var.buf[2] = 0x00;
+    attachedCANBus->sendFrame(var);
 
 
 
-    // // // send 5% speed
-    // var.buf[0] = 0x31;
-    // var.buf[1] = secondhalf;
-    // var.buf[2] = firsthalf;
-    // attachedCANBus->sendFrame(var);
-
-
-
+    var.buf[0] = 0x31;
+    var.buf[1] = secondhalf; //secondhalf
+    var.buf[2] = firsthalf; // first half
+    attachedCANBus->sendFrame(var);
 }
 
 void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
