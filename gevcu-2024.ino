@@ -147,6 +147,7 @@ in JSON instead. This is much easier to work with.
 MemCache *memCache;
 Heartbeat *heartbeat;
 SerialConsole *serialConsole;
+Statemachine *statemachine;
 template<class T> inline Print &operator <<(Print &obj, T arg) { obj.print(arg); return obj; } //Lets us stream SerialUSB
 
 byte i = 0;
@@ -175,7 +176,7 @@ void initializeDevices() {
     heartbeat = new Heartbeat();
     Logger::info("add: Heartbeat (id: %X, %X)", HEARTBEAT, heartbeat);
     heartbeat->setup();
-
+    statemachine = new Statemachine();
     //fault handler is always enabled too - its also statically allocated so no using -> here
     faultHandler.setup();
 
