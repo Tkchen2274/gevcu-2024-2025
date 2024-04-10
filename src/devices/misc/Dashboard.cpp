@@ -21,17 +21,25 @@ void DashboardDevice::setup() {
 
     setAttachedCANBus(0);
     //Relevant BMS messages are 0x300 - 0x30F
-    attachedCANBus->attach(this, 0x200, 0x7f0, false);
+    attachedCANBus->attach(this, 0x310, 0x000, false);
     tickHandler.attach(this, DashboardTickInt);
 }
 
 /*For all multibyte integers the format is MSB first, LSB last
 */
 void DashboardDevice::handleCanFrame(const CAN_message_t &frame) {
-    Logger::info("Test id=%X len=%X data=%X,%X,%X,%X,%X,%X,%X,%X",
+    if(Logger::isDebug()){
+        Logger::debug("dash Test id=%X len=%X data=%X,%X,%X,%X,%X,%X,%X,%X",
                       frame.id, frame.len, 
                       frame.buf[0], frame.buf[1], frame.buf[2], frame.buf[3],
                       frame.buf[4], frame.buf[5], frame.buf[6], frame.buf[7]);
+    }
+    if(frame.id == 0x310){
+        speed = frame.buf[0];
+    }else if(frame.id == 0x311){
+        temp = frame.buf[0];
+    }
+    
 }
 
 DeviceId DashboardDevice::getId() {
@@ -48,9 +56,9 @@ void DashboardDevice::handleTick()
     var.len = 3;
     var.id = 0x203;
     
-    var.buf[0] = 0x3D;
-    var.buf[1] = 0x1B;
-    var.buf[2] = 0x00;
+    var.buf[0] = speed;
+    var.buf[1] = temp;
+    var.buf[2] = 0x10;
     attachedCANBus->sendFrame(var);
     
     // var.buf[0] = 0x51;

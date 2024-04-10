@@ -21,6 +21,7 @@ public:
     DeviceType getType();
 private:
     CAN_message_t var;
-
+    int temp = 0;
+    int speed = 0;
 };
 #endif
