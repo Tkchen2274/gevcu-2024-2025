@@ -18,19 +18,20 @@ void Statemachine::updateState(State x){extern_curr_state = x;}
 
 void Statemachine::handleTick() {
 
-  switch (extern_curr_state){
+  switch (extern_curr_state)
+  {
     case S0:
       updateState(S1);
-      Logger::console("\nI am in state S0");
-      SerialUSB.print('0');
+      Logger::console("\nI am in state S0 ");
+      // SerialUSB.print('0');
     case S1:
       updateState(S2);
-      Logger::console("\nI am in state S1");
-      SerialUSB.print('1');
+      Logger::console("\nI am in state S1 ");
+      // SerialUSB.print('1');
     case S2:
       updateState(S0);
-      Logger::console("\nI am in state S2");
-      SerialUSB.print('2');
+      Logger::console("\nI am in state S2 ");
+      // SerialUSB.print('2');
   }
   
   // if (extern_curr_state == S0) {
