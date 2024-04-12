@@ -9,23 +9,33 @@ Statemachine::Statemachine() {
 }
 
 // std::string Statemachine::getState() { return curr_state; }
+// Statemachine::Statemachine() { 
+// 	curr_state = S0; 
+			       
+// }
+
+State Statemachine::getState() { return curr_state; }
 
 void Statemachine::setup() {
+
   tickHandler.detach(this);
   tickHandler.attach(this, CFG_TICK_INTERVAL_HEARTBEAT);
 }
 
 void Statemachine::handleTick() {
-  Logger::console("\n*************SYSTEM MENU *****************");
-  // asdf
-  //
-  // this is wehre the state machine goes
-  //
-  // if (curr_state = S0) {
+  // Logger::console("\nthis is the statemachine");
+  
+  if (extern_curr_state == S0) {
+    extern_curr_state = S1;
+    SerialUSB.print('0');
 
-  // } else if (curr_state = S1) {
+  } else if (extern_curr_state == S1) {
+    extern_curr_state = S2;
+    SerialUSB.print('1');
 
-  // } else if (curr_state = S2) {
+  } else if (extern_curr_state == S2) {
+    extern_curr_state = S0;
+    SerialUSB.print('2');
 
-  // }
+  }
 }

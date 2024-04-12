@@ -22,6 +22,10 @@ enum State {
 
 extern State extern_curr_state; // Declaration of a global variable
 
+// #define S0 "S0"
+// #define S1 "S1"
+// #define S2 "S2"
+// #define CFG_TICK_INTERVAL_HEARTBEAT                 2000000
 // struct RawSignalData {
 //     int32_t input1; // e.g. pot #1 or the signal from a can bus throttle
 //     int32_t input2; // e.g. pot #2 (optional)
@@ -32,7 +36,8 @@ class Statemachine : public TickObserver {
 public:
   Statemachine(); // constructor
   void handleTick();
-  std::string getState();
+  State getState();
+  // std::string getState();
   void setup();
 
 private:
