@@ -1,6 +1,5 @@
 #include "Statemachine.h"
 
-<<<<<<< HEAD
 State extern_curr_state = S0;
 
 Statemachine::Statemachine() { 
@@ -10,41 +9,33 @@ Statemachine::Statemachine() {
 }
 
 // std::string Statemachine::getState() { return curr_state; }
-=======
-Statemachine::Statemachine() { 
-	curr_state = S0; 
+// Statemachine::Statemachine() { 
+// 	curr_state = S0; 
 			       
-}
+// }
 
-std::string Statemachine::getState() { return curr_state; }
->>>>>>> 4d8799480cdf1d39d9fc84fa8616d65cfae3ccc3
+State Statemachine::getState() { return curr_state; }
 
 void Statemachine::setup() {
+
   tickHandler.detach(this);
   tickHandler.attach(this, CFG_TICK_INTERVAL_HEARTBEAT);
 }
 
 void Statemachine::handleTick() {
-  Logger::console("\n*************SYSTEM MENU *****************");
-  // asdf
-  //
-  // this is wehre the state machine goes
-  //
-<<<<<<< HEAD
-  // if (curr_state = S0) {
+  // Logger::console("\nthis is the statemachine");
+  
+  if (extern_curr_state == S0) {
+    extern_curr_state = S1;
+    SerialUSB.print('0');
 
-  // } else if (curr_state = S1) {
+  } else if (extern_curr_state == S1) {
+    extern_curr_state = S2;
+    SerialUSB.print('1');
 
-  // } else if (curr_state = S2) {
-
-  // }
-=======
-  if (curr_state = S0) {
-
-  } else if (curr_state = S1) {
-
-  } else if (curr_state = S2) {
+  } else if (extern_curr_state == S2) {
+    extern_curr_state = S0;
+    SerialUSB.print('2');
 
   }
->>>>>>> 4d8799480cdf1d39d9fc84fa8616d65cfae3ccc3
 }
