@@ -37,12 +37,11 @@ public:
   Statemachine(); // constructor
   void handleTick();
   State getState();
-  // std::string getState();
+  void updateState(State);
   void setup();
 
 private:
   int32_t input1;
-  // std::string curr_state;
   State curr_state;
   // analog value from the pedal
   // digital signal form button
