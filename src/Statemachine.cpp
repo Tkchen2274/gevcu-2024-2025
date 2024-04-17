@@ -20,6 +20,27 @@ void Statemachine::handleTick() {
 
   switch (extern_curr_state)
   {
+    /*
+    State 0: Idle car
+    State 1: Signal to car to prepare for driving
+    State 2: Motor responds to APPS
+    if (State 0 and Ready to drive button){
+      send signal to dash
+      update to State 1
+    }
+    if (State 1 and NOT Tractive system master switch)
+    {
+      update to state 0
+    }
+    if (State 1 and Tracktive system master switch)
+    {
+      update to state 2
+    }
+    if (State 2 and Not tractive system Master Switch)
+    {
+      update to state 1
+    }
+    */
     case S0:
       updateState(S1);
       Logger::console("\nI am in state S0 ");
