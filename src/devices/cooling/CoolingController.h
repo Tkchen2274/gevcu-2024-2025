@@ -1,7 +1,8 @@
 /*
- * PotBrake.h
+ * HeatCoolController.h - implements a simple unified way to control fans, coolant pumps, heaters, etc that
+ might be used in a car. 
  *
- Copyright (c) 2013 Collin Kidder, Michael Neuweiler, Charles Galpin
+ Copyright (c) 2021 Collin Kidder, Michael Neuweiler, Charles Galpin
 
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the
@@ -24,54 +25,63 @@
 
  */
 
-#ifndef POT_BRAKE_H_
-#define POT_BRAKE_H_
+#ifndef HEATCOOL_H_
+#define HEATCOOL_H_
 
 #include <Arduino.h>
 #include "../../config.h"
-#include "PotThrottle.h"
 #include "../../sys_io.h"
 #include "../../TickHandler.h"
 #include "../../Logger.h"
 #include "../../DeviceManager.h"
+#include "../../FaultHandler.h"
+#include "../../FaultCodes.h"
 
-#define POTBRAKEPEDAL 0x1099
-#define THROTTLE_INPUT_BRAKELIGHT  2
+#define COOLCONTROL 0x3210
+#define CFG_TICK_INTERVAL_COOLCONTROL     200000
 
-/*
- * The extended configuration class with additional parameters for PotBrake
- *
- * NOTE: Because of ThrottleDetector, this currently MUST be the same as PotThrottleConfiguratin !!!
- */
-class PotBrakeConfiguration: public PotThrottleConfiguration {
+
+class CoolingControllerConfiguration: public DeviceConfiguration {
 public:
+    //I/O pins
+    uint8_t fanAccumulatorPin;
+    uint8_t fanMotorPin;
+    uint8_t waterAccumulatorPin;
+    uint8_t waterMotorPin;
+    uint8_t accumulatorTemperatureSensorPin;
+    uint8_t motorTemperatureSensorPin;
+
+    float motorPumpOnTemperature;
+    float motorPumpOffTempearture;
+    float accumulatorPumpOnTemperature;
+    float accumulatorPumpOffTemperature;
+
+
+    float motorFanOnTemperature;
+    float motorFanOffTemperature;
+    float accumulatorFanOnTemperature;
+    float accumulatorFanOffTemperature;
 };
 
-class PotBrake: public Throttle {
+class CoolingController: public Device {
 public:
-    PotBrake();
+    CoolingController();
     void setup();
     void earlyInit();
     void handleTick();
     DeviceId getId();
     DeviceType getType();
 
-    RawSignalData *acquireRawSignal();
-
     void loadConfiguration();
     void saveConfiguration();
 
-    int16_t getLevel();
-
 protected:
-    bool validateSignal(RawSignalData *);
-    int16_t calculatePedalPosition(RawSignalData *);
-    int16_t mapPedalPosition(int16_t);
 
 private:
-    RawSignalData rawSignal;
+    bool isAccumulatorPumpOn;
+    bool isMotorPumpOn;
+    bool isAccumulatorFanOn;
+    bool isMotorFanOn;
 };
 
-#endif /* POT_BRAKE_H_ */
-
-
+#endif
