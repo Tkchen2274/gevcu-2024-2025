@@ -46,9 +46,9 @@ void PotBrake::earlyInit()
 void PotBrake::setup() {
     crashHandler.addBreadcrumb(ENCODE_BREAD("PTBRK") + 0);
     tickHandler.detach(this); // unregister from TickHandler first
-
     Logger::info("add device: PotBrake (id: %X, %X)", POTBRAKEPEDAL, this);
-
+    
+    loadConfiguration();
     PotBrakeConfiguration *config = (PotBrakeConfiguration *) getConfiguration();
 
     Throttle::setup(); //call base class
@@ -68,7 +68,7 @@ void PotBrake::setup() {
     //set digital ports to inputs and pull them up all inputs currently active low
     //pinMode(THROTTLE_INPUT_BRAKELIGHT, INPUT_PULLUP); //Brake light switch
 
-    loadConfiguration();
+    
     tickHandler.attach(this, CFG_TICK_INTERVAL_POT_THROTTLE);
 }
 
@@ -162,17 +162,17 @@ DeviceId PotBrake::getId() {
     return (POTBRAKEPEDAL);
 }
 
+
+int16_t PotBrake::getLevel()
+{
+    return calculatePedalPosition(acquireRawSignal());
+}
+
 /*
  * Return the device type
  */
 DeviceType PotBrake::getType() {
     return (DEVICE_BRAKE);
-}
-
-
-int16_t PotBrake::getLevel()
-{
-    return calculatePedalPosition(acquireRawSignal());
 }
 
 /*
@@ -187,8 +187,8 @@ void PotBrake::loadConfiguration() {
     // we deliberately do not load config via parent class here !
 
     //if (prefsHandler->checksumValid()) { //checksum is good, read in the values stored in EEPROM
-        prefsHandler->read("BrakeMin", (uint16_t *)&config->minimumLevel1, 6544);
-        prefsHandler->read("BrakeMax", (uint16_t *)&config->maximumLevel1, 13088);
+        prefsHandler->read("BrakeMin", (uint16_t *)&config->minimumLevel1, 409);
+        prefsHandler->read("BrakeMax", (uint16_t *)&config->maximumLevel1, 3681);
         prefsHandler->read("BrakeMaxRegen", &config->maximumRegen, 50);
         prefsHandler->read("BrakeMinRegen", &config->minimumRegen, 0);
         prefsHandler->read("BrakeADC", &config->AdcPin1, 2);
@@ -210,6 +210,7 @@ void PotBrake::saveConfiguration() {
     prefsHandler->write("BrakeMinRegen", config->minimumRegen);
     prefsHandler->write("BrakeADC", config->AdcPin1);
     prefsHandler->saveChecksum();
+    prefsHandler->forceCacheWrite();
 }
 
-PotBrake potBrake;
+DMAMEM PotBrake potBrake;

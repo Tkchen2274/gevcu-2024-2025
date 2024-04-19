@@ -60,7 +60,6 @@ public:
 
     void loadConfiguration();
     void saveConfiguration();
-
     int16_t getLevel();
 
 protected:
@@ -73,5 +72,3 @@ private:
 };
 
 #endif /* POT_BRAKE_H_ */
-
-

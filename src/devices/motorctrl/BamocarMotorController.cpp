@@ -56,7 +56,7 @@ void BamocarMotorController::handleTick() {
     var.len = 3;
     var.id = 0x201; 
 
-
+    
     MotorController::handleTick();
     if (throttleRequested < 0) throttleRequested = 0;
     if (throttleRequested > 1000 && throttleRequested < 1300) throttleRequested = 1000;
