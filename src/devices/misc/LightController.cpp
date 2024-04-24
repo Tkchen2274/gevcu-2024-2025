@@ -67,6 +67,8 @@ void LightController::setup() {
     tickHandler.attach(this, CFG_TICK_INTERVAL_LIGHTING);
 }
 
+
+
 /*
  * Process a timer event. This is where you should be doing checks and updates. 
  */
@@ -87,12 +89,13 @@ void LightController::handleTick() {
         {
             if (mctl->getSelectedGear() == MotorController::Gears::REVERSE)
             {
-                systemIO.setDigitalOutput(config->reverseLightOutput, true);
+                
+                systemIO.setDigitalOutput(config->brakeLightOutput, true);
             }
-            else systemIO.setDigitalOutput(config->reverseLightOutput, false);
+            else systemIO.setDigitalOutput(config->brakeLightOutput, false);
         }
     }
-    /**/
+    
     if (config->brakeLightOutput < 255)
     {
         int16_t level = 0;
@@ -102,10 +105,13 @@ void LightController::handleTick() {
         }
         if (level > config->reqRegenLevel)
         {
+            Logger::info("%i", level);
             systemIO.setDigitalOutput(config->brakeLightOutput, true);
+
         }
         else systemIO.setDigitalOutput(config->brakeLightOutput, false);
     }
+    
 }
 
 /*
@@ -138,7 +144,7 @@ void LightController::loadConfiguration() {
     //TODO put the output pin to the right pin, right now it is set to 1
     prefsHandler->read("BrakeLightOut", &config->brakeLightOutput, 1);
     prefsHandler->read("ReverseLightOut", &config->reverseLightOutput, 255);
-    prefsHandler->read("ReqTorque", &config->reqRegenLevel, 30);
+    prefsHandler->read("ReqTorque", &config->reqRegenLevel, 10);
 }
 
 /*

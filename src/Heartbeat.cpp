@@ -79,6 +79,10 @@ void Heartbeat::handleTick() {
         Logger::console("AIN0: %i, AIN1: %i, AIN2: %i, AIN3: %i, AIN4: %i, AIN5: %i, AIN6: %i, AIN7: %i", 
                         systemIO.getAnalogIn(0), systemIO.getAnalogIn(1), systemIO.getAnalogIn(2), systemIO.getAnalogIn(3),
                         systemIO.getAnalogIn(4), systemIO.getAnalogIn(5), systemIO.getAnalogIn(6), systemIO.getAnalogIn(7));
+        Logger::console("DOUT0: %d, DOUT1: %d, DOUT2: %d, DOUT3: %d,DOUT4: %d, DOUT5: %d, DOUT6: %d, DOUT7: %d", 
+                        systemIO.getDigitalOutput(0), systemIO.getDigitalOutput(1), systemIO.getDigitalOutput(2), systemIO.getDigitalOutput(3),
+                        systemIO.getDigitalOutput(4), systemIO.getDigitalOutput(5), systemIO.getDigitalOutput(6), systemIO.getDigitalOutput(7));
+        //Logger::console("SD-Detect: %u", digitalRead(5));
         //Logger::console("SD-Detect: %u", digitalRead(5));
         BatteryManager *bms = reinterpret_cast<BatteryManager *>(deviceManager.getDeviceByType(DEVICE_BMS));
         if (!bms) {

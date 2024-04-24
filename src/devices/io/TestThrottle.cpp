@@ -67,7 +67,7 @@ void TestThrottle::handleTick() {
 /*
  * Retrieve raw input signals from the throttle hardware.
  */
-RawSignalData *TestThrottle::acquireRawSignal() {
+    RawSignalData *TestThrottle::acquireRawSignal() {
     TestThrottleConfiguration *config = (TestThrottleConfiguration *) getConfiguration();
 
     if (rampingDirection) rawSignal.input1 += 4;
