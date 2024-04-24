@@ -107,13 +107,7 @@ void LightController::handleTick() {
         {
             Logger::info("%i", level);
             systemIO.setDigitalOutput(config->brakeLightOutput, true);
-            systemIO.setDigitalOutput(0, true);
-            systemIO.setDigitalOutput(2, true);
-            systemIO.setDigitalOutput(3, true);
-            systemIO.setDigitalOutput(4, true);
-            systemIO.setDigitalOutput(5, true);
-            systemIO.setDigitalOutput(6, true);
-            systemIO.setDigitalOutput(7, true);
+
         }
         else systemIO.setDigitalOutput(config->brakeLightOutput, false);
     }
