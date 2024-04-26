@@ -27,7 +27,7 @@ void Statemachine::handleTick() {
   // Logger::console("DIN1: %d, DIN4: %d, DIN5: %d", brake, tsms, r2d);
 
   if (extern_curr_state == S0) {
-    Logger::console("\nI am in state S0");
+    // Logger::console("\nI am in state S0");
     // Logger::console("", brake);
     // Logger::console(tsms);
     // Logger::console(r2d);
@@ -50,7 +50,7 @@ void Statemachine::handleTick() {
     }
     // extern_curr_state = S2;
     updateState(S2);
-    Logger::console("\nI am in state S1");
+    // Logger::console("\nI am in state S1");
     SerialUSB.print('1');
 
   } else if (extern_curr_state == S2) {
@@ -61,7 +61,7 @@ void Statemachine::handleTick() {
       updateState(S0);
     }
     // extern_curr_state = S0;
-    Logger::console("\nI am in state S2");
+    // Logger::console("\nI am in state S2");
     SerialUSB.print('2');
   }
   
