@@ -80,8 +80,12 @@ void BamocarMotorController::handleTick() {
     //Logger::warn("throttleRequested | %i", throttleRequested);
     // //rounding to nearest 10th
     int a = throttleRequested;
-    if(extern_curr_state == S0)
+    
+    Logger::console("\nI am Bamocar and it's either state S0 or S1 loop");
+
+    if(extern_curr_state == S2)
     {
+        Logger::console("\nI am Bamocar and I'm inside S2 loop");
         if (a < 50)
         {
             a = 0;
