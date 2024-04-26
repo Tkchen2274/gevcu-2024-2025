@@ -136,9 +136,9 @@ void BamocarMotorController::handleTick() {
             attachedCANBus->sendFrame(var);
         }
     }   
-    else {
-        Logger::console("\n Bamocar: either state S0/S1 loop");
-    }
+    // else {
+    //     Logger::console("\n Bamocar: either state S0/S1 loop");
+    // }
 }
 
 void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
