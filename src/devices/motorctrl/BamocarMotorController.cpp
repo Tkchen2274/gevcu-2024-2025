@@ -80,12 +80,11 @@ void BamocarMotorController::handleTick() {
     //Logger::warn("throttleRequested | %i", throttleRequested);
     // //rounding to nearest 10th
     int a = throttleRequested;
-    
-    Logger::console("\nI am Bamocar and it's either state S0 or S1 loop");
+    Logger::console(extern_curr_state)
 
     if(extern_curr_state == S2)
     {
-        Logger::console("\nI am Bamocar and I'm inside S2 loop");
+        Logger::console("\nBamocar: inside S2 loop");
         if (a < 50)
         {
             a = 0;
@@ -137,6 +136,9 @@ void BamocarMotorController::handleTick() {
             attachedCANBus->sendFrame(var);
         }
     }   
+    else {
+        Logger::console("\n Bamocar: either state S0/S1 loop");
+    }
 }
 
 void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
