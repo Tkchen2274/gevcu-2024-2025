@@ -21,50 +21,50 @@ void Statemachine::handleTick() {
   // assume that brake 1 is depressed
   // assume that tsms is okay if it's 1
 
-  brake = systemIO.getDigitalIn(0);
-  tsms = systemIO.getDigitalIn(1);
-  r2d = systemIO.getDigitalIn(2);
-  switch (extern_curr_state)
-  {
-    if (extern_curr_state == S0) {
-      Logger::console("\nI am in state S0");
-      Logger::console(brake);
-      Logger::console(tsms);
-      Logger::console(r2d);
-      // extern_curr_state = S1;
-      if(brake && tsms && r2d){
-        updateState(S1);
-      } else {
-        updateState(S0);
-      }
-      
-      
-      SerialUSB.print('0');
+  bool brake = systemIO.getDigitalIn(1);
+  bool tsms = systemIO.getDigitalIn(4);
+  bool r2d = systemIO.getDigitalIn(5);
+  // Logger::console("DIN1: %d, DIN4: %d, DIN5: %d", brake, tsms, r2d);
 
-    } else if (extern_curr_state == S1) {
-
-      if(tsms && brake && r2d){
-        update(S2);
-      } else {
-        update(S0);
-      }
-      // extern_curr_state = S2;
-      updateState(S2);
-      Logger::console("\nI am in state S1");
-      SerialUSB.print('1');
-
-    } else if (extern_curr_state == S2) {
-      // gevcu is connected to low voltage
-      if(tsms){
-        update(S2);
-      } else {
-        update(S0);
-      }
-      // extern_curr_state = S0;
-      Logger::console("\nI am in state S2");
-      SerialUSB.print('2');
+  if (extern_curr_state == S0) {
+    Logger::console("\nI am in state S0");
+    // Logger::console("", brake);
+    // Logger::console(tsms);
+    // Logger::console(r2d);
+    // extern_curr_state = S1;
+    if(brake && tsms && r2d){
+      updateState(S1);
+    } else {
+      updateState(S0);
     }
+    
+    
+    SerialUSB.print('0');
+
+  } else if (extern_curr_state == S1) {
+
+    if(tsms && brake && r2d){
+      updateState(S2);
+    } else {
+      updateState(S0);
+    }
+    // extern_curr_state = S2;
+    updateState(S2);
+    Logger::console("\nI am in state S1");
+    SerialUSB.print('1');
+
+  } else if (extern_curr_state == S2) {
+    // gevcu is connected to low voltage
+    if(tsms){
+      updateState(S2);
+    } else {
+      updateState(S0);
+    }
+    // extern_curr_state = S0;
+    Logger::console("\nI am in state S2");
+    SerialUSB.print('2');
   }
+  
   
 
 
