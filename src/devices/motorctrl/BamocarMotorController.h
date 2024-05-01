@@ -85,6 +85,8 @@ private:
     uint16_t torqueCommand;
     void timestamp();
     CAN_message_t var; // delete this when handleTick is fully functional
+    CAN_message_t freeRolling;
+    int throttleAnalogValue;
 };
 
 #endif /* DMOC_H_ */

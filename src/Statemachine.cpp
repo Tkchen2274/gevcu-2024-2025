@@ -22,6 +22,10 @@ void Statemachine::handleTick() {
   // assume that tsms is okay if it's 1
 
   bool brake = systemIO.getDigitalIn(1);
+  // need to change brakes to analog value
+  // 0.5 - 4.5 volt
+  // how about a threshold of above 4
+
   bool tsms = systemIO.getDigitalIn(4);
   bool r2d = systemIO.getDigitalIn(5);
   // Logger::console("DIN1: %d, DIN4: %d, DIN5: %d", brake, tsms, r2d);
