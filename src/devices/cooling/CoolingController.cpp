@@ -101,6 +101,24 @@ void CoolingController::handleTick() {
     double division = (500000 / convertedVoltage) - 100000;
     double result = evaluateExpression(division);
     Logger::info(COOLCONTROL, "Temperature Reading in Celsius: %f", result);
+
+    // Running the PWM
+    systemIO.setDigitalOutput(0,true);
+    systemIO.setDigitalOutputPWM(0, 60, 400);
+    systemIO.setDigitalOutput(1, true);
+    systemIO.setDigitalOutputPWM(1, 60, 400);
+    systemIO.setDigitalOutput(2,true);
+    systemIO.setDigitalOutputPWM(2, 60, 400);
+    systemIO.setDigitalOutput(3,true);
+    systemIO.setDigitalOutputPWM(3, 60, 400);
+    systemIO.setDigitalOutput(4,true);
+    systemIO.setDigitalOutputPWM(4, 60, 400);
+    systemIO.setDigitalOutput(5,true);
+    systemIO.setDigitalOutputPWM(5, 60, 400);
+    systemIO.setDigitalOutput(6,true);
+    systemIO.setDigitalOutputPWM(6, 60, 400);
+    systemIO.setDigitalOutput(7,true);
+    systemIO.setDigitalOutputPWM(7, 60, 400);
 }
 /*
  * Return the device ID
