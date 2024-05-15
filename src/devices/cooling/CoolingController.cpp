@@ -76,6 +76,12 @@ void CoolingController::setup() {
     tickHandler.attach(this, CFG_TICK_INTERVAL_COOLCONTROL);
 }
 
+double evaluateExpression(double x) {
+    double exponent = -1.11 * pow(10, -4) * x;
+    double result = 76.9 * exp(exponent);
+    return result;
+}
+
 /*
  * Process a timer event. This is where you should be doing checks and updates. 
  */
@@ -91,27 +97,10 @@ void CoolingController::handleTick() {
     int32_t motorTemperatureAnalogReading = systemIO.getAnalogIn(config->motorTemperatureSensorPin);
     int32_t accumulatorTemperatureAnalogReading = systemIO.getAnalogIn(config->accumulatorTemperatureSensorPin);
     
-    // Logger::info(COOLCONTROL, "Accumulator Temperature Anlog Reading: %d", accumulatorTemperatureAnalogReading);
-
-    // Convert the analog input to temperature values using an equation from the manufacturer
-    int RESISTORVALUE = 100000; // Change this to the resistor value on the temperature sensor
-
-    // double motorTemperature = (motorTemperatureAnalogReading * 5) / 1023;
-    // motorTemperature = (motorTemperature * RESISTORVALUE / 5) / ( 1 - motorTemperature / 5 );
-    // 3 = -0.00388 * (motorTemperature) + 65.6;
-
-    // double accumulatorTemperature = (accumulatorTemperatureAnalogReading * 5) / 1023;
-    // accumulatorTemperature = (accumulatorTemperature * RESISTORVALUE / 5) / ( 1 - accumulatorTemperature / 5 );
-    // accumulatorTemperature = -0.00388 * (accumulatorTemperature) + 65.6;
-
-    int32_t test = motorTemperatureAnalogReading;
-    int32_t test1 = test / 82;
-    Logger::info(COOLCONTROL, "test: %d", test);
-    Logger::info(COOLCONTROL, "test1: %d", test1);
-    int32_t test2 = (500000 / test1 - 10000);
-    Logger::info(COOLCONTROL, "test2: %d", test2);
-    int32_t test3 =  66 - (388 * test2) / 100000;
-    Logger::info(COOLCONTROL, "test3: %d", test3); 
+    double convertedVoltage = (motorTemperatureAnalogReading * (5.0 / 3071.0));
+    double division = (500000 / convertedVoltage) - 100000;
+    double result = evaluateExpression(division);
+    Logger::info(COOLCONTROL, "Temperature Reading in Celsius: %f", result);
 }
 /*
  * Return the device ID
