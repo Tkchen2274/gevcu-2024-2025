@@ -335,7 +335,7 @@ void CanHandler::sendFrameToUSB(const CAN_message_t &msg, int busNum)
         buff[11 + i] = msg.buf[i];
     }
     buff[11 + msg.len] = 0;
-    SerialUSB1.write(buff, 12 + msg.len);
+    SerialUSB.write(buff, 12 + msg.len);
 }
 
 void CanHandler::sendFrameToUSB(const CANFD_message_t &msg, int busNum)
@@ -360,7 +360,7 @@ void CanHandler::sendFrameToUSB(const CANFD_message_t &msg, int busNum)
         buff[12 + i] = msg.buf[i];
     }
     buff[12 + msg.len] = 0;
-    SerialUSB1.write(buff, 13 + msg.len);
+    SerialUSB.write(buff, 13 + msg.len);
 }
 
 void CanHandler::loop()
@@ -371,8 +371,8 @@ void CanHandler::loop()
     int c;
     uint32_t now;
     static int out_bus = 0;
-    while (SerialUSB1.available()) {
-        c = SerialUSB1.read();
+    while (SerialUSB.available()) {
+        c = SerialUSB.read();
         switch (gvretState)
         {
         case IDLE:
@@ -403,7 +403,7 @@ void CanHandler::loop()
                 buff[3] = (now >> 8) & 0xFF;
                 buff[4] = (now >> 16) & 0xFF;
                 buff[5] = (now >> 24) & 0xFF;
-                SerialUSB1.write(buff, 6);
+                SerialUSB.write(buff, 6);
                 break;                
             case PROTO_DIG_INPUTS:
                 //immediately return the data for digital inputs
@@ -416,7 +416,7 @@ void CanHandler::loop()
                 buff[1] = 2;
                 buff[2] = temp8;
                 buff[3] = checksumCalc(buff, 3);
-                SerialUSB1.write(buff, 4);
+                SerialUSB.write(buff, 4);
                 gvretState = IDLE; //ignore
                 break;
             case PROTO_ANA_INPUTS:
@@ -446,7 +446,7 @@ void CanHandler::loop()
                 buff[15] = (temp16 >> 8) && 0xFF;
                 temp8 = checksumCalc(buff, 16);
                 buff[16] = temp8;
-                SerialUSB1.write(buff, 17);
+                SerialUSB.write(buff, 17);
                 gvretState = IDLE; //ignore
                 break;
             case PROTO_SET_DIG_OUT:
@@ -469,7 +469,7 @@ void CanHandler::loop()
                 buff[9] = (sysConfig->canSpeed[1] >> 8) & 0xFF;
                 buff[10] = (sysConfig->canSpeed[1] >> 16) & 0xFF;
                 buff[11] = (sysConfig->canSpeed[1] >> 24) & 0xFF;
-                SerialUSB1.write(buff, 12);
+                SerialUSB.write(buff, 12);
                 gvretState = IDLE; //ignore
                 break;
             case PROTO_GET_DEV_INFO:
@@ -482,7 +482,7 @@ void CanHandler::loop()
                 buff[5] = 0;
                 buff[6] = 0;
                 buff[7] = 0; //singlewire mode. Maybe use some day
-                SerialUSB1.write(buff, 8);
+                SerialUSB.write(buff, 8);
                 gvretState = IDLE; //ignore
                 break;
             case PROTO_SET_SW_MODE:
@@ -493,7 +493,7 @@ void CanHandler::loop()
                 buff[1] = 0x09;
                 buff[2] = 0xDE;
                 buff[3] = 0xAD;
-                SerialUSB1.write(buff, 4);
+                SerialUSB.write(buff, 4);
                 gvretState = IDLE;            
                 break;
             case PROTO_SET_SYSTYPE:
@@ -506,14 +506,14 @@ void CanHandler::loop()
                 buff[0] = 0xF1;
                 buff[1] = 12;
                 buff[2] = 3;
-                SerialUSB1.write(buff, 3);
+                SerialUSB.write(buff, 3);
                 gvretState = IDLE;
                 break;
             case PROTO_GET_EXT_BUSES:
                 buff[0] = 0xF1;
                 buff[1] = 13;
                 for (int u = 2; u < 17; u++) buff[u] = 0;
-                SerialUSB1.write(buff, 18);
+                SerialUSB.write(buff, 18);
                 gvretStep = 0;
                 gvretState = IDLE;            
                 break;
