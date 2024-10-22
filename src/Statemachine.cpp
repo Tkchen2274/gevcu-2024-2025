@@ -1,4 +1,13 @@
 #include "Statemachine.h"
+#include "sys_io.h"
+
+
+/*
+ * Ready to Drive StateMachine 
+ * 
+ *
+ */
+
 
 State extern_curr_state = S0;
 
@@ -17,35 +26,35 @@ State Statemachine::getState() { return extern_curr_state; }
 void Statemachine::updateState(State x){extern_curr_state = x;}
 
 void Statemachine::handleTick() {
+   
+  // Temp Variables
+  bool threshold_brake;
 
-  // assume that brake 1 is depressed
-  // assume that tsms is okay if it's 1
+  float raw_brake1 = systemIO.getAnalogIn(0);  // referece pothrottle.cpp for mapping
+  float raw_brake2 = systemIO.getAnalogIn(4);
 
-  bool brake = systemIO.getDigitalIn(1);
-  // need to change brakes to analog value
-  // 0.5 - 4.5 volt
-  // how about a threshold of above 4
+  threshold
 
-  bool tsms = systemIO.getDigitalIn(4);
-  bool r2d = systemIO.getDigitalIn(5);
+
+  
+  bool tsms = systemIO.getDigitalIn(4);   // reads the digital switch value
+  bool r2d = systemIO.getDigitalIn(5);    // reads the digital r2d 
+
   // Logger::console("DIN1: %d, DIN4: %d, DIN5: %d", brake, tsms, r2d);
 
   if (extern_curr_state == S0) {
-    // Logger::console("\nI am in state S0");
-    // Logger::console("", brake);
-    // Logger::console(tsms);
-    // Logger::console(r2d);
-    // extern_curr_state = S1;
-    if(brake && tsms && r2d){
+
+     if(tsms && r2d && threshold_brake){
       updateState(S1);
     } else {
       updateState(S0);
     }
-    
-    
+     
     SerialUSB.print('0');
 
-  } else if (extern_curr_state == S1) {
+  } 
+
+  else if (extern_curr_state == S1) {
 
     if(tsms && brake && r2d){
       updateState(S2);
@@ -57,7 +66,9 @@ void Statemachine::handleTick() {
     // Logger::console("\nI am in state S1");
     SerialUSB.print('1');
 
-  } else if (extern_curr_state == S2) {
+  } 
+
+  else if (extern_curr_state == S2) {
     // gevcu is connected to low voltage
     if(tsms){
       updateState(S2);
