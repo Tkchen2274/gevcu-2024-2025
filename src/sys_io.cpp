@@ -492,12 +492,12 @@ void SystemIO::handleTick()
         //Logger::debug("%i: %u %u %u", i, digPWMOutput[i].progress, digPWMOutput[i].freqInterval, digPWMOutput[i].triggerPoint);        
         if (digPWMOutput[i].progress >= digPWMOutput[i].triggerPoint)
         {
-            Logger::debug("%i on!", i);
+            //Logger::debug("%i on!", i);
             pcaDigitalOutputCache |= (1 << i);
         }
         else
         {
-            Logger::debug("%i OFF!", i);
+            //Logger::debug("%i OFF!", i);
             outputMask = ~(1 << i);
             pcaDigitalOutputCache &= outputMask;
         }
