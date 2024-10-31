@@ -7,8 +7,16 @@
 #include "../../CanHandler.h"
 
 
-#define StatemachineID 0x001
+#define StatemachineID 0x103
 #define StatemachineTickInt 1000000
+
+enum State {
+    S0,
+    S1,
+    S2
+};
+
+extern State extern_curr_state;
 
 class StatemachineDevice: public Device, CanObserver{
 public:
@@ -19,9 +27,15 @@ public:
     void handleCanFrame(const CAN_message_t &frame);
     DeviceId getId();
     DeviceType getType();
+
+    State getState();
+    void updateState(State);
+    // State extern_curr_state;
 private:
-    CAN_message_t var;
-    int temp = 0;
-    int speed = 0;
+    State curr_state;
+    int8_t dash_send_flag;
+    int8_t dash_val_msg;
+    CAN_message_t buzz_msg;
+    
 };
 #endif
