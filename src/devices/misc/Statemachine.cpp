@@ -37,6 +37,16 @@ void StatemachineDevice::setup() {
     buzz_msg.buf[0] = 0x1;
     buzz_msg.buf[1] = 0x30;
 
+    /*
+      buzz_msg[0] : a value to say hey buzz it up
+      buzz_msg[1] : what was the prev state (either 1 or 2) 
+                    you'll probably need to like change the 
+                    code to save the previous state? or update the msg
+                    right after, you can't take the current state cuz you 
+                    don't know if it's from S1 -> S2 buzz or S2 -> S2 buzz
+      buzz_msg[2] : idk a check sum (not needed honestly)
+    */
+
     counter_timer = 0; 
 }
 
@@ -50,7 +60,12 @@ void StatemachineDevice::handleCanFrame(const CAN_message_t &frame) {
                       frame.buf[4], frame.buf[5], frame.buf[6], frame.buf[7]);
     }
     // change the id and the actual like contents of the CAN frame
-    if(frame.id == 0x110){
+    /*
+      frame.buf[0] : value to turn on the 
+      frame.buf[1] : what state the dash recieved is in 
+      frame.buf[2] : idk a check sum (not needed honestly)
+    */
+    if(frame.id == 0x110){ 
       if(frame.buf[0] == 0x1 && frame.buf[1] == 0x2)
         dash_val_msg = 1; 
     }
@@ -83,11 +98,6 @@ void StatemachineDevice::handleTick() {
 
   if (extern_curr_state == S0) { // state 0 
     // Logger::console("\nI am in state S0");
-    // Logger::console("", brake);
-    // Logger::console(tsms);
-    // Logger::console(r2d);
-    // extern_curr_state = S1;
-
     if(threshold_brake && tsms && r2d){
       updateState(S1);
     } else {
@@ -98,6 +108,9 @@ void StatemachineDevice::handleTick() {
     SerialUSB.print('0');
 
   } else if (extern_curr_state == S1) { // state 1
+
+    // Logger::console("\nI am in state S1");
+    // SerialUSB.print('1');
 
     /*
       As long as the tsms && brake && r2d are all valid
@@ -141,21 +154,14 @@ void StatemachineDevice::handleTick() {
       dash_send_flag = 1;
     }
 
-    // updateState(S2);                         // this is for debugging 
-
-    // Logger::console("\nI am in state S1");
-    // SerialUSB.print('1');
-
   } else if (extern_curr_state == S2) { // state 2
-
+    // Logger::console("\nI am in state S2");
+    // SerialUSB.print('2');
     if(tsms){
       updateState(S2);
     } else {
       updateState(S0);
     }
-
-    // Logger::console("\nI am in state S2");
-    SerialUSB.print('2');
   }
 }
 // testDevice test_device;
