@@ -20,16 +20,16 @@ extern State extern_curr_state;
 
 class StatemachineDevice: public Device, CanObserver{
 public:
-    StatemachineDevice();  //called nearly immediately to initialize your own variables
-    void setup();          //called only if the device is actually enabled
-    void earlyInit();      //called early and whether or not the device is enabled. Just used to setup configuration
-    void handleTick(); 
-    void handleCanFrame(const CAN_message_t &frame);
+    StatemachineDevice();    // called nearly immediately to initialize your own variables
+    void setup();            // called only if the device is actually enabled
+    void earlyInit();        // called early and whether or not the device is enabled. Just used to setup configuration
+    void handleTick();       // this is called every 1000000 cycles (i think needs checking)
+    void handleCanFrame(const CAN_message_t &frame); // handle can frame
     DeviceId getId();
     DeviceType getType();
 
-    State getState();
-    void updateState(State);
+    // State getState();     // not needed because the state is no longer private, public  
+    void updateState(State); // just a function to update state, looks better
 
 private:
     // State curr_state;        

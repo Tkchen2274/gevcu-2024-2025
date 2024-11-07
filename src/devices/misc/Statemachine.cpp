@@ -113,7 +113,15 @@ void StatemachineDevice::handleTick() {
      /*
       TODO: Send message to the dash and wait for a  
       message check. 
+
+      Maybe on the dash end I'll send the state that it's currently 
+      if it's it was in state 2 then it changed to state 1, then you 
+      need to buzz the sound again, but when it's still in state 2 and 
+      it still hasn't recieved the confirmation message then you don't need to 
+      respond to the play the button msg
+
     */
+
     if (dash_send_flag) {
       dash_send_flag = 0; 
       attachedCANBus->sendFrame(buzz_msg);
@@ -135,7 +143,6 @@ void StatemachineDevice::handleTick() {
 
     // updateState(S2);                         // this is for debugging 
 
-    // extern_curr_state = S2;
     // Logger::console("\nI am in state S1");
     // SerialUSB.print('1');
 
@@ -147,10 +154,9 @@ void StatemachineDevice::handleTick() {
       updateState(S0);
     }
 
-    // extern_curr_state = S0;
     // Logger::console("\nI am in state S2");
     SerialUSB.print('2');
   }
 }
-//testDevice test_device;
+// testDevice test_device;
 StatemachineDevice statemachine_device;
