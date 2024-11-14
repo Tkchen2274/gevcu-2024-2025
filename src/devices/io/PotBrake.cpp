@@ -124,7 +124,8 @@ bool PotBrake::validateSignal(RawSignalData *rawSignal) {
     int32_t calcBrake1, calcBrake2;
     
     calcBrake1 = normalizeInput(rawSignal->input1, config->minimumLevel1, config->maximumLevel1 );
-    //Logger::console("Value is %d", calcBrake1);
+    Logger::console("Value is %d", calcBrake1);
+    Logger::console("Value of 2 is %d", calcBrake2);
 
     if (calcBrake1 > (1000 + CFG_BRAKE_TOLERANCE)) // <-- Q, what is the break tolerance, define in .h
     {
