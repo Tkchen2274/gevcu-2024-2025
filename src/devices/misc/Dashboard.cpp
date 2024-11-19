@@ -52,6 +52,9 @@ DeviceType DashboardDevice::getType() {
 
 void DashboardDevice::handleTick()
 {
+    Throttle *accelerator = deviceManager.getAccelerator();
+    int throttleRequested = accelerator->getLevel();
+    
 
     var.len = 3;
     var.id = 0x203;
