@@ -23,5 +23,7 @@ private:
     CAN_message_t var;
     int temp = 0;
     int speed = 0;
+    int battery = 100; // should range from 0 to 100
+    int somethingElse = 0; // should display something else
 };
 #endif
