@@ -52,14 +52,13 @@ DeviceType DashboardDevice::getType() {
 
 void DashboardDevice::handleTick()
 {
-    Throttle *accelerator = deviceManager.getAccelerator();
-    int throttleRequested = accelerator->getLevel();
-    
+    MotorController* motorController = deviceManager.getMotorController();
+    int16_t actual_speed = motorController.getSpeedActual()
 
     var.len = 4; // changed to 4, max space for classes
     var.id = 0x203;
     
-    var.buf[0] = speed;
+    var.buf[0] = actual_speed;
     var.buf[1] = temp;
     var.buf[2] = battery;
     var.buf[3] = somethingElse;
