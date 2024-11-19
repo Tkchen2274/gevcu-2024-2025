@@ -53,12 +53,13 @@ DeviceType DashboardDevice::getType() {
 void DashboardDevice::handleTick()
 {
 
-    var.len = 4; // changed to 
+    var.len = 4; // changed to 4, max space for classes
     var.id = 0x203;
     
     var.buf[0] = speed;
     var.buf[1] = temp;
-    var.buf[2] = 0x10;
+    var.buf[2] = battery;
+    var.buf[3] = somethingElse;
     attachedCANBus->sendFrame(var);
     
     // var.buf[0] = 0x51;
