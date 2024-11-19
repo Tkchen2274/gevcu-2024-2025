@@ -53,7 +53,7 @@ DeviceType DashboardDevice::getType() {
 void DashboardDevice::handleTick()
 {
 
-    var.len = 3;
+    var.len = 4; // changed to 
     var.id = 0x203;
     
     var.buf[0] = speed;
