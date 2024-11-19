@@ -23,5 +23,7 @@ private:
     CAN_message_t var;
     int temp = 0;
     int speed = 0;
+    int battery = 100; // 0-100
+    int somethingElse = 0; // something else, temp in F maybe?
 };
 #endif
