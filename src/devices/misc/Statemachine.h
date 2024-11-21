@@ -8,7 +8,8 @@
 
 
 #define StatemachineID 0x103
-#define StatemachineTickInt 1000000
+// #define StatemachineTickInt 1000000
+#define StatemachineTickInt 500000
 
 enum State {
     S0,
@@ -38,8 +39,19 @@ private:
     CAN_message_t buzz_msg;   // the constructed msg to activate buzzer_msg 
     uint32_t counter_timer;   // control when to send another buzzer message
                               // NOTE: there needs to be a check in the dash 
-                              //    that it'll only buzz once when recieved for the first time
-                              //    any more messages after should be ignored
+                              //       that it'll only buzz once when recieved for the first time
+                              //       any more messages after should be ignored
+    int32_t brake1;           // this si probably need to change (ask tim)
+    int32_t brake2;           // this is probably need to change (ask tim)
+    bool tsms;                // this is circuit is connected
+    bool r2d;                 // digital signal ready to drive
+    bool threshold_brake;     // if it's above a threshold (ask tim)
+
     
 };
 #endif
+
+
+// 11/13/24 - you need test if they can go through each of the states (test the din signals)
+//          - then test with the feedback between dash and gevcu
+//          - test the brake signal (combine with tim)

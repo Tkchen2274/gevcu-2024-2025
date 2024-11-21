@@ -1,5 +1,29 @@
 #include "Statemachine.h"
 
+
+
+/*
+  TODO: 
+    - Send message to the dash and wait for a message check.
+
+    11/13/24 
+    - this is implemented on the gevcu side (not tested)      
+    - someone is doing the  
+    - Maybe on the dash end I'll send the state that it's currently
+      if it's it was in state 2 then it changed to state 1, then you
+      need to buzz the sound again, but when it's still in state 2 and
+      it still hasn't recieved the confirmation message then you don't need to
+      respond to the play the button msg
+
+    11/13/24 
+    - this is being implemented
+
+    11/20/24 
+    - the state machine flow is tested. now i just need to sync with tim on the
+      brake stuff and use the real teensy 
+*/
+
+
 State extern_curr_state = S0;  // Define and initialize the variable here
 
 StatemachineDevice::StatemachineDevice():Device() {
@@ -7,7 +31,7 @@ StatemachineDevice::StatemachineDevice():Device() {
     shortName = "SM";
 }
 
-State StatemachineDevice::getState() { return extern_curr_state; }
+// State StatemachineDevice::getState() { return extern_curr_state; }
 
 void StatemachineDevice::updateState(State x){extern_curr_state = x;}
 
@@ -35,7 +59,7 @@ void StatemachineDevice::setup() {
     buzz_msg.len = 2;
     buzz_msg.id = 0x109;
     buzz_msg.buf[0] = 0x1;
-    buzz_msg.buf[1] = 0x30;
+    buzz_msg.buf[1] = 2;
 
     /*
       buzz_msg[0] : a value to say hey buzz it up
@@ -80,88 +104,75 @@ DeviceType StatemachineDevice::getType() {
 
 void StatemachineDevice::handleTick() {
 
-  // bool brake = systemIO.getDigitalIn(1);
-  int32_t = brake1;
-  int32_t = brake2;
+/*
+ *  read in the values
+ */
 
-  // boolean checks
-  bool tsms = systemIO.getDigitalIn(4);
-  bool r2d = systemIO.getDigitalIn(5);
-  bool threshold_brake;
+  brake1 = 40;
+  brake2 = 0;
+  tsms   = systemIO.getDigitalIn(4);
+  r2d    = systemIO.getDigitalIn(5);
+  tsms   = 1;                           // testing purposes
+  r2d    = 1;                           // testing purposes
 
-  if (break1 > 32 && break2 < 32) // change the value above some threshold
+  if (brake1 > 32 && brake2 < 32)       // change the value above some threshold
   {
-    threshold_break = true;
+    threshold_brake = true;
   }
-  
-  // Logger::console("DIN1: %d, DIN4: %d, DIN5: %d", brake, tsms, r2d);
-
-  if (extern_curr_state == S0) { // state 0 
-    // Logger::console("\nI am in state S0");
+  threshold_brake = true;
+  if (extern_curr_state == S0) {        // state 0, this is tested
     if(threshold_brake && tsms && r2d){
       updateState(S1);
+       buzz_msg.buf[1] = 1; // set to the first time you send the rdy buzzer
     } else {
       updateState(S0);
     }
-    
-    
-    SerialUSB.print('0');
+    Logger::console("I am in state S0");
+    Logger::console("DIN4: %d, DIN5: %d", tsms, r2d);
+    Logger::console("end \n ");
 
   } else if (extern_curr_state == S1) { // state 1
-
-    // Logger::console("\nI am in state S1");
-    // SerialUSB.print('1');
-
-    /*
-      As long as the tsms && brake && r2d are all valid
-      Then proceeed to S2, else we'll have to replay this again
-
-      It assumes that you have the brakes depressed in state 2, you might 
-      beable to get rid of it
-
-      Note: I might need a timer on the redundancy and count some cycles 
-      before returning to s0
-    */
-
-     /*
-      TODO: Send message to the dash and wait for a  
-      message check. 
-
-      Maybe on the dash end I'll send the state that it's currently 
-      if it's it was in state 2 then it changed to state 1, then you 
-      need to buzz the sound again, but when it's still in state 2 and 
-      it still hasn't recieved the confirmation message then you don't need to 
-      respond to the play the button msg
-
-    */
-
     if (dash_send_flag) {
       dash_send_flag = 0; 
       attachedCANBus->sendFrame(buzz_msg);
+      Logger::console("I sent message\n");
     }
-
-    if (dash_val_msg) {
-      if(tsms && threshold_brake){
+    if (tsms && threshold_brake) {
+      updateState(S1);
+      if (dash_val_msg) {
         updateState(S2);
       }
     } else {
       updateState(S0);
     }
 
-    counter_timer++; 
-
-    if (counter_timer == 20000){
+    counter_timer++;
+    Logger::console("counter: %d", counter_timer);
+    if (counter_timer > 50){
       dash_send_flag = 1;
+      counter_timer = 0;
+       buzz_msg.buf[1] = 2; // if you have to resend the signal, in state 2
     }
+    Logger::console(" I am in state S1\n");
+
+    /*
+      As long as the tsms && brake && r2d are all valid
+      Then proceeed to S2, else we'll have to replay this again
+
+      It assumes that you have the brakes depressed in state 2, you might
+      beable to get rid of it
+
+      Note: I might need a timer on the redundancy and count some cycles
+      before returning to s0
+    */
 
   } else if (extern_curr_state == S2) { // state 2
-    // Logger::console("\nI am in state S2");
-    // SerialUSB.print('2');
     if(tsms){
       updateState(S2);
     } else {
       updateState(S0);
     }
+    Logger::console("\n I am in state S2");
   }
 }
 // testDevice test_device;
