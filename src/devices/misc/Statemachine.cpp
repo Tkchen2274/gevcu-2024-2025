@@ -187,5 +187,14 @@ void StatemachineDevice::handleTick() {
     Logger::console("\n I am in state S2");
   }
 }
+
+
+void checkBrakeLevel() { // help with chat to get the function over here
+        if (potBrake) {
+            int16_t level = potBrake->getLevel();
+            Serial.println("Brake Level: " + String(level));
+        }
+    }
+
 // testDevice test_device;
 StatemachineDevice statemachine_device;
