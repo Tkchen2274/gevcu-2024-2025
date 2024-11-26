@@ -1,5 +1,5 @@
 #include "Statemachine.h"
-
+#include "../io/PotBrake.h"
 
 
 /*
@@ -21,10 +21,17 @@
     11/20/24 
     - the state machine flow is tested. now i just need to sync with tim on the
       brake stuff and use the real teensy 
+    11/25/24
+    - changed to pot brake value and merged with tim's code 
+    - we have the brake pressure sensors, but we can't test it without the fluid
+    - so we have to wait till next year
 */
 
 
 State extern_curr_state = S0;  // Define and initialize the variable here
+
+
+StatemachineDevice::StatemachineDevice(PotBrake *brake) : potBrake(brake) {}
 
 StatemachineDevice::StatemachineDevice():Device() {
     commonName = "Statemachine";
@@ -108,14 +115,19 @@ void StatemachineDevice::handleTick() {
  *  read in the values
  */
 
-  brake1 = 40;
-  brake2 = 0;
+  // brake1 = 40;
+  // brake2 = 0;
+
+  // brake = PotBrake.getLevel();
+  int16_t brakeLevel = potBrake->getLevel(); // Get the brake level
+  brake = 10;                           // change this until it's time to test the pressure sensor 
+
   tsms   = systemIO.getDigitalIn(4);
   r2d    = systemIO.getDigitalIn(5);
   tsms   = 1;                           // testing purposes
   r2d    = 1;                           // testing purposes
 
-  if (brake1 > 32 && brake2 < 32)       // change the value above some threshold
+  if (brake < 20)                       // change the value above some threshold
   {
     threshold_brake = true;
   }

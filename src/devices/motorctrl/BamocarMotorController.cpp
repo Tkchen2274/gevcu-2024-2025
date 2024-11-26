@@ -86,7 +86,7 @@ void BamocarMotorController::handleTick() {
    // throttleValue = throttleRequested;
     // Logger::console(extern_curr_state)
 
-    if(extern_curr_state == S2)
+    if(extern_curr_state == S2) // global variable to stop the it 
     {
         Logger::console("\n Bamocar: S2 loop");
         if (throttleAnalogValue < 50)

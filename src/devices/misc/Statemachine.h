@@ -5,6 +5,8 @@
 #include "../Device.h"
 #include "../../DeviceManager.h"
 #include "../../CanHandler.h"
+#include "../io/PotBrake.h"
+
 
 
 #define StatemachineID 0x103
@@ -32,6 +34,15 @@ public:
     // State getState();     // not needed because the state is no longer private, public  
     void updateState(State); // just a function to update state, looks better
 
+    StatemachineDevice(PotBrake *brake);  // added
+
+    void checkBrakeLevel() {
+        if (potBrake) {
+            int16_t level = potBrake->getLevel();
+            Serial.println("Brake Level: " + String(level));
+        }
+    }
+
 private:
     // State curr_state;        
     int8_t dash_send_flag;    // controls when to send message gevcu to dash 
@@ -41,11 +52,14 @@ private:
                               // NOTE: there needs to be a check in the dash 
                               //       that it'll only buzz once when recieved for the first time
                               //       any more messages after should be ignored
-    int32_t brake1;           // this si probably need to change (ask tim)
-    int32_t brake2;           // this is probably need to change (ask tim)
+    // int32_t brake1;           // this si probably need to change (ask tim)
+    // int32_t brake2;           // this is probably need to change (ask tim)
+    int16_t brake; 
     bool tsms;                // this is circuit is connected
     bool r2d;                 // digital signal ready to drive
     bool threshold_brake;     // if it's above a threshold (ask tim)
+
+    PotBrake *potBrake; // Pointer to a PotBrake instance
 
     
 };

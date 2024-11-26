@@ -61,7 +61,7 @@ public:
     void loadConfiguration();
     void saveConfiguration();
     int16_t getLevel();
-
+    
 protected:
     bool validateSignal(RawSignalData *);
     int16_t calculatePedalPosition(RawSignalData *);
