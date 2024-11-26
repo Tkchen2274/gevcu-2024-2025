@@ -36,13 +36,6 @@ public:
 
     StatemachineDevice(PotBrake *brake);  // added
 
-    void checkBrakeLevel() {
-        if (potBrake) {
-            int16_t level = potBrake->getLevel();
-            Serial.println("Brake Level: " + String(level));
-        }
-    }
-
 private:
     // State curr_state;        
     int8_t dash_send_flag;    // controls when to send message gevcu to dash 
