@@ -90,7 +90,6 @@ private:
     bool enable_sent;
     bool disable_sent;
     int last_sent_value;
-    int get_speed_tick;
 };
 
 #endif /* DMOC_H_ */
