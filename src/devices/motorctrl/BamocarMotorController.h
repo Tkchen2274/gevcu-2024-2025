@@ -87,6 +87,10 @@ private:
     CAN_message_t var; // delete this when handleTick is fully functional
     CAN_message_t freeRolling;
     int throttleAnalogValue;
+    bool enable_sent;
+    bool disable_sent;
+    int last_sent_value;
+    int get_speed_tick;
 };
 
 #endif /* DMOC_H_ */

@@ -59,7 +59,7 @@ void ThinkBatteryManager::setup() {
     setAttachedCANBus(config->canbusNum);
 
     //Relevant BMS messages are 0x300 - 0x30F
-    attachedCANBus->attach(this, 0x300, 0x7f0, false);
+    attachedCANBus->attach(this, 0x300, 0xff0, false);
 
     tickHandler.attach(this, CFG_TICK_INTERVAL_BMS_THINK);
     crashHandler.addBreadcrumb(ENCODE_BREAD("THBMS") + 0);
