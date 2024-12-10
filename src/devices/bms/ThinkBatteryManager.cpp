@@ -58,7 +58,7 @@ void ThinkBatteryManager::setup() {
 
     setAttachedCANBus(config->canbusNum);
 
-    //Relevant BMS messages are 0x300 - 0x30F
+    //We will specify the broadcast message for the BMS can frame through the orion BMS software
     attachedCANBus->attach(this, 0x300, 0x7f0, false);
 
     tickHandler.attach(this, CFG_TICK_INTERVAL_BMS_THINK);
@@ -68,93 +68,34 @@ void ThinkBatteryManager::setup() {
 /*For all multibyte integers the format is MSB first, LSB last
 */
 void ThinkBatteryManager::handleCanFrame(const CAN_message_t &frame) {
+    
+    /*
+        The format for this message is as follows:
+
+        Byte 0: Cell ID (8 bit, starting with 0)
+        Byte 1&2: Instant Voltage (16 bit, unit: 0.1mv)
+        Byte 3&4: Internal Resistance (15 bit, unit: 0.01mOhm)
+        Byte 5&6: Open Voltage (16 bit, unit: 0.1mv)
+        Byte 7: Checksum (8 bit)
+
+        Bit 8 in byte #3 is whether or not the cell is shunting (1 indicates current is being shunted, 0 means it is not).
+
+        Checksum Calculation:
+
+        Take the broadcast ID and add 8 (the length).
+
+        Add bytes 0-6 to the value from step 1.
+
+        Chop off the least significant 8 bits (effectively turning it into an unsigned byte) and that will be the checksum value.
+
+        If the computed checksum does not equal the provided checksum, the values should be discarded.
+     */
     int temp;
     crashHandler.addBreadcrumb(ENCODE_BREAD("THBMS") + 1);
     canHandlerBus0.process(frame);
-    // switch (frame.id) {
-    // case 0x300: //Start up message
-    //     //we're not really interested in much here except whether init worked.
-    //     if ((frame.buf[6] & 1) == 0)  //there was an initialization error!
-    //     {
-    //         faultHandler.raiseFault(THINKBMS, FAULT_BMS_INIT, true);
-    //         allowCharge = false;
-    //         allowDischarge = false;
-    //     }
-    //     else
-    //     {
-    //         faultHandler.cancelOngoingFault(THINKBMS, FAULT_BMS_INIT);
-    //     }
-    //     break;
-    // case 0x301: //System Data 0
-    //     //first two bytes = current, next two voltage, next two DOD, last two avg. temp
-    //     //readings in tenths
-    //     packVoltage = (frame.buf[0] * 256 + frame.buf[1]) / 10.0f;
-    //     packCurrent = (frame.buf[2] * 256 + frame.buf[3]) / 10.0f;
-    //     break;
-    // case 0x302: //System Data 1
-    //     if ((frame.buf[0] & 1) == 1) //Byte 0 bit 0 = general error
-    //     {
-    //         faultHandler.raiseFault(THINKBMS, FAULT_BMS_MISC, true);
-    //         allowDischarge = false;
-    //         allowCharge = false;
-    //     }
-    //     else
-    //     {
-    //         faultHandler.cancelOngoingFault(THINKBMS, FAULT_BMS_MISC);
-    //     }
-    //     if ((frame.buf[2] & 1) == 1) //Byte 2 bit 0 = general isolation error
-    //     {
-    //         faultHandler.raiseFault(THINKBMS, FAULT_HV_BATT_ISOLATION, true);
-    //         allowDischarge = false;
-    //         allowCharge = false;
-    //     }
-    //     else
-    //     {
-    //         faultHandler.cancelOngoingFault(THINKBMS, FAULT_HV_BATT_ISOLATION);
-    //     }
-    //     //Min discharge voltage = bytes 4-5 - tenths of a volt
-    //     //Max discharge current = bytes 6-7 - tenths of an amp
-    //     temp = (int16_t)(frame.buf[6] * 256 + frame.buf[7]);
-    //     if (temp > 0) allowDischarge = true;
-    //     break;
-    // case 0x303: //System Data 2
-    //     //bytes 0-1 = max charge voltage (tenths of volt)
-    //     //bytes 2-3 = max charge current (tenths of amp)
-    //     temp = (int16_t)(frame.buf[2] * 256 + frame.buf[3]);
-    //     if (temp > 0) allowCharge = true;
-    //     //byte 4 bit 1 = regen braking OK, bit 2 = Discharging OK
-    //     //byte 6 bit 3 = EPO (emergency power off) happened, bit 5 = battery pack fan is on
-    //     break;
-    // case 0x304: //System Data 3
-    //     //Byte 2 lower 4 bits = highest error category
-    //     //categories: 0 = no faults, 1 = Reserved, 2 = Warning, 3 = Delayed switch off, 4 = immediate switch off
-    //     //bytes 4-5 = Pack max temperature (tenths of degree C) - Signed
-    //     //byte 6-7 = Pack min temperature (tenths of a degree C) - Signed
-    //     lowestCellTemp = ((int16_t)(frame.buf[4] * 256 + frame.buf[5])) / 10.0f;
-    //     highestCellTemp = ((int16_t)(frame.buf[6] * 256 + frame.buf[7])) / 10.0f;
-    //     break;
-    // case 0x305: //System Data 4
-    //     //byte 2 bits 0-3 = BMS state
-    //     //0 = idle state, 1 = discharge state (contactor closed), 15 = fault state
-    //     //byte 2 bit 4 = Internal HV isolation fault
-    //     //byte 2 bit 5 = External HV isolation fault
-    //     break;
-    // case 0x306: //System Data 5
-    //     //bytes 0-1 = Equiv. internal resistance in milliohms
-    //     //not recommended to rely on so probably just ignore it
-    //     break;
-    //     //technically there is a specification for frames 0x307 - 0x30A but I have never seen these frames
-    //     //sent on the canbus system so I doubt that they are used.
-    //     /*
-    //     	case 0x307: //System Data 6
-    //     	case 0x308: //System Data 7
-    //     	case 0x309: //System Data 8
-    //     	case 0x30A: //System Data 9
-    //     	//do we care about the serial #? Probably not.
-    //     	case 0x30E: //Serial # part 1
-    //     	case 0x30B: //Serial # part 2
-    //     */
-    // }
+    switch (frame.id) {
+
+    }
     crashHandler.addBreadcrumb(ENCODE_BREAD("THBMS") + 2);
 }
 
