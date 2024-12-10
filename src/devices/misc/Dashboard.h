@@ -21,9 +21,9 @@ public:
     DeviceType getType();
 private:
     CAN_message_t var;
-    int temp = 0;
-    int speed = 0;
-    int battery = 100; // 0-100
-    int somethingElse = 0; // something else, temp in F maybe?
+    int motor_temp;
+    int bamocar_temp;
+    int speed;
+    int battery;
 };
 #endif
