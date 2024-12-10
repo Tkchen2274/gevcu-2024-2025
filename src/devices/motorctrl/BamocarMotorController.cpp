@@ -97,15 +97,15 @@ void BamocarMotorController::handleTick() {
     if (throttleRequested > 1400) throttleRequested = 0;
 
     throttleAnalogValue = throttleRequested / 10 * 10; // rounding it to the nearest 10th percent
-    throttleAnalogValue = 0;
-    // if(extern_curr_state == S2)
-    // {
+    if(extern_curr_state == S2)
+    {
         // Logger::console("\n Bamocar: S2 loop");
         if (throttleAnalogValue < 50)
         {
             throttleAnalogValue = 0;
             if(!disable_sent){
                 attachedCANBus -> sendFrame(freeRolling);
+                last_sent_value = 0;
                 disable_sent = true;
                 enable_sent = false;
             }
@@ -143,20 +143,16 @@ void BamocarMotorController::handleTick() {
             }
 
         }
-    // }   
-    // else if(extern_curr_state == S1){
-    //     // Logger::console("\n Bamocar: S1 loop");
-    // }
-    // else {
-    //     // Logger::console("\n Bamocar: S0 loop");
-    // }
+    }   
+    else if(extern_curr_state == S1){
+        // Logger::console("\n Bamocar: S1 loop");
+    }
+    else {
+        // Logger::console("\n Bamocar: S0 loop");
+    }
 }
 
 void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
-    //if byte 0 is 0x30 -> get actual speed
-        //byte 1 is second half of speed
-        //byte 2 is first half of speed
-
     Logger::info("Test id=%X len=%X data=%X,%X,%X,%X,%X,%X,%X,%X",
                       frame.id, frame.len, 
                       frame.buf[0], frame.buf[1], frame.buf[2], frame.buf[3],
