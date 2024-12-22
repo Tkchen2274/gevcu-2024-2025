@@ -30,8 +30,8 @@ void BamocarMotorController::setup() {
     setOpState(ENABLE);
 
     setAttachedCANBus(0);
-    //Relevant BMS messages are 0x300 - 0x30F
-    attachedCANBus->attach(this, 0x200, 0x7f0, false);
+    //Can Message to Bamocar for the actual speed
+    attachedCANBus->attach(this, 0x100, 0x000, false);
     
     tickHandler.attach(this, CFG_TICK_INTERVAL_MOTOR_CONTROLLER_BAMOCAR);
 
@@ -46,10 +46,31 @@ void BamocarMotorController::setup() {
     freeRolling.buf[1] = 0x04;
     freeRolling.buf[2] = 0x00;
     attachedCANBus->sendFrame(freeRolling);
-
     // initialize speed command message
     var.len = 3;
     var.id = 0x201; 
+
+    //send message to get speed update every 100ms.
+    var.buf[0] = 0x3D;
+    var.buf[1] = 0x30;
+    var.buf[2] = 0x64;
+    attachedCANBus->sendFrame(var);
+
+    //send message to get motor CONTROLLER temperature update every 100ms.
+    var.buf[0] = 0x3D;
+    var.buf[1] = 0x4a;
+    var.buf[2] = 0x64;
+    attachedCANBus->sendFrame(var);
+
+    //send message to get motor temperature update every 100ms.
+    var.buf[0] = 0x3D;
+    var.buf[1] = 0x49;
+    var.buf[2] = 0x64;
+
+    attachedCANBus->sendFrame(var);
+    enable_sent = false;
+    disable_sent = true;
+    last_sent_value = 0;
 }
 
 
@@ -68,7 +89,6 @@ void BamocarMotorController::handleTick() {
 
     //CONFIGURATIONS FOR THE MOTORCONTROLLER
     //CONFIGURATIONS FOR THE MOTORCONTROLLER
-    bool once = true;
 
     
     MotorController::handleTick();
@@ -76,34 +96,19 @@ void BamocarMotorController::handleTick() {
     if (throttleRequested > 1000 && throttleRequested < 1300) throttleRequested = 1000;
     if (throttleRequested > 1400) throttleRequested = 0;
 
-    
-    //Logger::warn("throttleRequested | %i", throttleRequested);
-    // //rounding to nearest 10th
-    // int a = throttleRequested;
-   // throttleValue = throttleRequested;
-    // Logger::console(extern_curr_state)
-
+    throttleAnalogValue = throttleRequested / 10 * 10; // rounding it to the nearest 10th percent
     if(extern_curr_state == S2)
     {
-        Logger::console("\n Bamocar: S2 loop");
+        // Logger::console("\n Bamocar: S2 loop");
         if (throttleAnalogValue < 50)
         {
             throttleAnalogValue = 0;
-            
-            // var.len = 3;
-            // var.id = 0x201;
-
-            // // attachedCANBus->sendFrame(var);
-            // var.buf[0] = 0x51;
-            // // 0x04 to DISABLE
-            // // var.buf[1] = 0x04;
-            // // 0x00 to ENABLE
-            // var.buf[1] = 0x04;
-            // var.buf[2] = 0x00;
-            // attachedCANBus->sendFrame(var);
-
-            attachedCANBus -> sendFrame(freeRolling);
-
+            if(!disable_sent){
+                attachedCANBus -> sendFrame(freeRolling);
+                last_sent_value = 0;
+                disable_sent = true;
+                enable_sent = false;
+            }
         }
         else{
             throttleAnalogValue = throttleAnalogValue/20;
@@ -116,39 +121,38 @@ void BamocarMotorController::handleTick() {
             uint32_t secondhalf = (throttleAnalogValue & 0xFF);
             uint32_t firsthalf = ((throttleAnalogValue >> 8));
             
-            // Logger::warn("%i First half %i | Second half %i", a, firsthalf, secondhalf);
-            // check if the motor will still spin even if the pedal is released all the way up
 
             var.len = 3;
             var.id = 0x201;
 
-            // attachedCANBus->sendFrame(var);
-            var.buf[0] = 0x51;
-            // 0x04 to DISABLE
-            // var.buf[1] = 0x04;
-            // 0x00 to ENABLE
-            var.buf[1] = 0x00;
-            var.buf[2] = 0x00;
-            attachedCANBus->sendFrame(var);
+            if (!enable_sent){
+                var.buf[0] = 0x51;
+                var.buf[1] = 0x00;
+                var.buf[2] = 0x00;
+                attachedCANBus->sendFrame(var);
+                disable_sent = false;
+                enable_sent = true;
+            }
+            if (last_sent_value != throttleAnalogValue){
+                //0x31 for speed, 0x90 for torque
+                var.buf[0] = 0x90;
+                var.buf[1] = secondhalf; //secondhalf
+                var.buf[2] = firsthalf; // first half
+                attachedCANBus->sendFrame(var);
+                last_sent_value = throttleAnalogValue;
+            }
 
-
-            
-            var.buf[0] = 0x31;
-            var.buf[1] = secondhalf; //secondhalf
-            var.buf[2] = firsthalf; // first half
-            attachedCANBus->sendFrame(var);
         }
     }   
     else if(extern_curr_state == S1){
-        Logger::console("\n Bamocar: S1 loop");
+        // Logger::console("\n Bamocar: S1 loop");
     }
     else {
-        Logger::console("\n Bamocar: S0 loop");
+        // Logger::console("\n Bamocar: S0 loop");
     }
 }
 
 void BamocarMotorController::handleCanFrame(const CAN_message_t &frame) {
-    
     Logger::info("Test id=%X len=%X data=%X,%X,%X,%X,%X,%X,%X,%X",
                       frame.id, frame.len, 
                       frame.buf[0], frame.buf[1], frame.buf[2], frame.buf[3],
