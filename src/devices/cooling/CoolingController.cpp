@@ -97,13 +97,18 @@ void CoolingController::handleTick() {
     int32_t motorTemperatureAnalogReading = systemIO.getAnalogIn(config->motorTemperatureSensorPin);
     int32_t accumulatorTemperatureAnalogReading = systemIO.getAnalogIn(config->accumulatorTemperatureSensorPin);
     
-    Logger::info(COOLCONTROL, "Analog Temp Reading: %f", motorTemperatureAnalogReading);
+    //Logger::info(COOLCONTROL, "Analog Temp Reading: %f", motorTemperatureAnalogReading);
     double convertedVoltage = (motorTemperatureAnalogReading * (5.0 / 3071.0));
-    if (convertedVoltage <= 0.000001){
+    //Logger::info(COOLCONTROL, "converted voltage %f", convertedVoltage);
+    if (motorTemperatureAnalogReading <= 0.000001){
         Logger::info(COOLCONTROL, "convertedVolage is 0");
     }
-    double division = (500000 / convertedVoltage) - 100000;
-    double result = evaluateExpression(division);
+    /*double division = (500000 / convertedVoltage) - 100000;
+    double result = evaluateExpression(division);*/
+    double resistor2 = (10000 * convertedVoltage) / (5 - convertedVoltage);
+    //resistor 1 = 10K ohms
+    //Logger::info(COOLCONTROL, "Resistance: %f", resistor2);
+    double result = 0.000000101908 * resistor2 * resistor2 - 0.0054716 * resistor2 + 70.266021;
     Logger::info(COOLCONTROL, "Temperature Reading in Celsius: %f", result);
 
     // Running the PWM

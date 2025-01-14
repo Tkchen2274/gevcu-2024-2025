@@ -46,20 +46,20 @@ int DashboardDevice::decode_hex(const int64_t first_half, const int64_t second_h
 /*For all multibyte integers the format is MSB first, LSB last
 */
 void DashboardDevice::handleCanFrame(const CAN_message_t &frame) {
-    switch (frame[0]){
-        //motor speed
-        case (0x30):
-            speed = decode_hex(frame[1], frame[2]);
-            break;
-        //bamocar temp
-        case (0x4a):
-            bamocar_temp = decode_hex(frame[1], frame[2]);
-            break;
-        //motor temp1
-        case (0x49):
-            motor_temp = decode_hex(frame[1], frame[2]);
-            break;
-    }
+    // switch (frame[0]){
+    //     //motor speed
+    //     case (0x30):
+    //         speed = decode_hex(frame[1], frame[2]);
+    //         break;
+    //     //bamocar temp
+    //     case (0x4a):
+    //         bamocar_temp = decode_hex(frame[1], frame[2]);
+    //         break;
+    //     //motor temp1
+    //     case (0x49):
+    //         motor_temp = decode_hex(frame[1], frame[2]);
+    //         break;
+    // }
 }
 
 DeviceId DashboardDevice::getId() {
