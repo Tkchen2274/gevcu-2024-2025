@@ -97,6 +97,7 @@ void CoolingController::handleTick() {
     int32_t motorTemperatureAnalogReading = systemIO.getAnalogIn(config->motorTemperatureSensorPin);
     int32_t accumulatorTemperatureAnalogReading = systemIO.getAnalogIn(config->accumulatorTemperatureSensorPin);
     
+    Logger::info(COOLCONTROL, "Analog Temp Reading: %f", motorTemperatureAnalogReading);
     double convertedVoltage = (motorTemperatureAnalogReading * (5.0 / 3071.0));
     double division = (500000 / convertedVoltage) - 100000;
     double result = evaluateExpression(division);
