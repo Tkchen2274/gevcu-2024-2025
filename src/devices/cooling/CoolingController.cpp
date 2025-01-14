@@ -123,6 +123,10 @@ void CoolingController::handleTick() {
     // systemIO.setDigitalOutputPWM(6, 60, 400);
     systemIO.setDigitalOutput(7,true);
     systemIO.setDigitalOutputPWM(7, 60, 400);
+
+    //Log the flowrate of the sensor
+    int32_t flowRate = systemIO.getAnalogIn(config->flowRateSensorPin);
+
 }
 /*
  * Return the device ID
@@ -155,6 +159,8 @@ void CoolingController::loadConfiguration() {
     //TODO Change pin number to pin for input
     prefsHandler->read("motorTempeartureSensorPin", &config->motorTemperatureSensorPin, 5); // ANALOG0 PIN (5-13thjan)
     prefsHandler->read("accumulatorTempeartureSensorPin", &config->accumulatorTemperatureSensorPin, 1); // ANALOG1 PIN
+    prefsHandler->read("accumulatorTempeartureSensorPin", &config->flowRateSensorPin, 5); // ANALOG1 PIN
+
     prefsHandler->read("fanAccumulatorPin", &config->fanAccumulatorPin, 255);
     prefsHandler->read("fanMotorPin", &config->fanMotorPin, 255);
     prefsHandler->read("waterAccumulatorPin", &config->waterAccumulatorPin, 255);

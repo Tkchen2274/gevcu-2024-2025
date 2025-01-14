@@ -50,12 +50,12 @@ public:
     uint8_t waterMotorPin;
     uint8_t accumulatorTemperatureSensorPin;
     uint8_t motorTemperatureSensorPin;
+    uint8_t flowRateSensorPin;
 
     float motorPumpOnTemperature;
     float motorPumpOffTempearture;
     float accumulatorPumpOnTemperature;
     float accumulatorPumpOffTemperature;
-
 
     float motorFanOnTemperature;
     float motorFanOffTemperature;
