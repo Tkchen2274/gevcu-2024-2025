@@ -94,19 +94,33 @@ void CoolingController::handleTick() {
     CoolingControllerConfiguration *config = (CoolingControllerConfiguration *) getConfiguration();
 
     // Retrieve the temperature of the motor and the accumulator
-    double motorTemperatureAnalogReading = .5;
-    motorTemperatureAnalogReading = motorTemperatureAnalogReading + .1;
-    double accumulatorTemperatureAnalogReading = systemIO.getAnalogIn(config->accumulatorTemperatureSensorPin);
+    int32_t motorTemperatureAnalogReading = systemIO.getAnalogIn(config->motorTemperatureSensorPin);
+    int32_t accumulatorTemperatureAnalogReading = systemIO.getAnalogIn(config->accumulatorTemperatureSensorPin);
+    
+    Logger::info(COOLCONTROL, "Analog Temp Reading: %f", motorTemperatureAnalogReading);
+    double convertedVoltage = (motorTemperatureAnalogReading * (5.0 / 3071.0));
+    if (convertedVoltage <= 0.000001){
+        Logger::info(COOLCONTROL, "convertedVolage is 0");
+    }
+    double division = (500000 / convertedVoltage) - 100000;
+    double result = evaluateExpression(division);
+    Logger::info(COOLCONTROL, "Temperature Reading in Celsius: %f", result);
 
-    double thermistorResistance = 5 * 10800.0/motorTemperatureAnalogReading - 10800; // with 10.8k resistor
-    double mappedTemp = 87.3*exp(-.0001276*thermistorResistance);
-    // double convertedVoltage = (motorTemperatureAnalogReading * (5.0 / 3071.0));
-    // Logger::info(COOLCONTROL, "read voltage: %f", motorTemperatureAnalogReading);
- 
-    // double division = (500000 / convertedVoltage) - 100000;
-    // double result = evaluateExpression(division);
-    Logger::info(COOLCONTROL, "Temperature Reading in Celsius: %f", mappedTemp);
-
+    // Running the PWM
+    // systemIO.setDigitalOutput(0,true);
+    // systemIO.setDigitalOutputPWM(0, 60, 400);
+    // systemIO.setDigitalOutput(1, true);
+    // systemIO.setDigitalOutputPWM(1, 60, 400);
+    // systemIO.setDigitalOutput(2,true);
+    // systemIO.setDigitalOutputPWM(2, 60, 400);
+    // systemIO.setDigitalOutput(3,true);
+    // systemIO.setDigitalOutputPWM(3, 60, 400);
+    // systemIO.setDigitalOutput(4,true);
+    // systemIO.setDigitalOutputPWM(4, 60, 400);
+    // systemIO.setDigitalOutput(5,true);
+    // systemIO.setDigitalOutputPWM(5, 60, 400);
+    // systemIO.setDigitalOutput(6,true);
+    // systemIO.setDigitalOutputPWM(6, 60, 400);
     systemIO.setDigitalOutput(7,true);
     systemIO.setDigitalOutputPWM(7, 60, 400);
 }
@@ -139,7 +153,7 @@ void CoolingController::loadConfiguration() {
     Device::loadConfiguration(); // call parent
 
     //TODO Change pin number to pin for input
-    prefsHandler->read("motorTempeartureSensorPin", &config->motorTemperatureSensorPin, 0); // ANALOG0 PIN
+    prefsHandler->read("motorTempeartureSensorPin", &config->motorTemperatureSensorPin, 5); // ANALOG0 PIN (5-13thjan)
     prefsHandler->read("accumulatorTempeartureSensorPin", &config->accumulatorTemperatureSensorPin, 1); // ANALOG1 PIN
     prefsHandler->read("fanAccumulatorPin", &config->fanAccumulatorPin, 255);
     prefsHandler->read("fanMotorPin", &config->fanMotorPin, 255);
