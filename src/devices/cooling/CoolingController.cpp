@@ -96,6 +96,12 @@ void CoolingController::handleTick() {
     // Retrieve the temperature of the motor and the accumulator
     int32_t motorTemperatureAnalogReading = systemIO.getAnalogIn(config->motorTemperatureSensorPin);
     int32_t accumulatorTemperatureAnalogReading = systemIO.getAnalogIn(config->accumulatorTemperatureSensorPin);
+
+    //Retrieve the voltage of +5v for use in voltage divider/ flow temp calculation (tim)
+    double sourceVoltage = VoltageSensorPin * (5.0 / 3071.0);
+    if (sourceVoltage <= 0.001){
+        Logger:info(COOLCONTROL, "sourceVoltage is 0, should be +5V");
+    }
     
     //Logger::info(COOLCONTROL, "Analog Temp Reading: %f", motorTemperatureAnalogReading);
     double convertedVoltage = (motorTemperatureAnalogReading * (5.0 / 3071.0));
@@ -105,11 +111,14 @@ void CoolingController::handleTick() {
     }
     /*double division = (500000 / convertedVoltage) - 100000;
     double result = evaluateExpression(division);*/
-    double resistor2 = (10000 * convertedVoltage) / (5 - convertedVoltage);
+    double resistor2 = (10000 * convertedVoltage) / (VoltageSensorPin - convertedVoltage); // (tim)VoltageSensorPin should be 5V, but the actual value on the GEVCU varies, so this uses the real value
     //resistor 1 = 10K ohms
     //Logger::info(COOLCONTROL, "Resistance: %f", resistor2);
     double result = 0.000000101908 * resistor2 * resistor2 - 0.0054716 * resistor2 + 70.266021;
     Logger::info(COOLCONTROL, "Temperature Reading in Celsius: %f", result);
+
+
+
 
     // Running the PWM
     // systemIO.setDigitalOutput(0,true);
@@ -158,7 +167,7 @@ void CoolingController::loadConfiguration() {
     Device::loadConfiguration(); // call parent
 
     //TODO Change pin number to pin for input
-    prefsHandler->read("motorTempeartureSensorPin", &config->motorTemperatureSensorPin, 5); // ANALOG0 PIN (5-13thjan)
+    prefsHandler->read("motorTempeartureSensorPin", &config->motorTemperatureSensorPin, 5); // ANALOG0 PIN (5-13thjan) (tim)is there an issue with mispelling? it is consistent, but ?
     prefsHandler->read("accumulatorTempeartureSensorPin", &config->accumulatorTemperatureSensorPin, 1); // ANALOG1 PIN
     prefsHandler->read("fanAccumulatorPin", &config->fanAccumulatorPin, 255);
     prefsHandler->read("fanMotorPin", &config->fanMotorPin, 255);
@@ -174,6 +183,8 @@ void CoolingController::loadConfiguration() {
     prefsHandler->read("motorFanOffTemperature", &config->motorFanOffTemperature, 0);
     prefsHandler->read("accumulatorFanOnTemperature", &config->accumulatorFanOnTemperature, 0);
     prefsHandler->read("accumulatorFanOffTemperature", &config->accumulatorFanOffTemperature, 0);
+
+    prefsHandler->read("VoltageSensorPin", &config->VoltageSensorPin, 7); //tim voltage sensor 
 }
 /*
  * Store the current configuration to EEPROM
@@ -200,6 +211,8 @@ void CoolingController::saveConfiguration() {
     prefsHandler->write("motorFanOffTemperature", config->motorFanOffTemperature);
     prefsHandler->write("accumulatorFanOnTemperature", config->accumulatorFanOnTemperature);
     prefsHandler->write("accumulatorFanOffTemperature", config->accumulatorFanOffTemperature);
+
+    prefsHandler->write("VoltageSensorPin", config->VoltageSensorPin); //tim voltage sensor 
 
     prefsHandler->saveChecksum();
     prefsHandler->forceCacheWrite();
